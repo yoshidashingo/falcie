@@ -27,7 +27,7 @@ Model weights are **coming soon**. Watch this repository for updates.
 
 ## Links
 
-- [Website](https://yoshidashingo.github.io/falcie/)
+- [Website](https://yoshidashingo.github.io/falCie/)
 - [GitHub](https://github.com/yoshidashingo/falcie)
 
 ## License

@@ -27,7 +27,7 @@
 
 ## リンク
 
-- [ウェブサイト](https://yoshidashingo.github.io/falcie/)
+- [ウェブサイト](https://yoshidashingo.github.io/falCie/)
 - [GitHub](https://github.com/yoshidashingo/falcie)
 
 ## ライセンス
