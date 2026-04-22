@@ -40,12 +40,14 @@ env/
 *.safetensors
 *.gguf
 *.ggml
+*.bin
 
 # Training artifacts
 wandb/
 lightning_logs/
 checkpoints/
 outputs/
+runs/
 
 # HuggingFace cache
 .cache/
