@@ -25,6 +25,19 @@ We believe the most powerful AI should belong to everyone. fal'Cie is a fully op
 
 Model weights are **coming soon**. Watch this repository for updates.
 
+## Project Plan
+
+The current plan turns this vision into measurable research, data, training, evaluation, and release workstreams:
+
+- [Roadmap](docs/roadmap.md)
+- [Evaluation Plan](docs/evaluation-plan.md)
+- [Data Policy](docs/data-policy.md)
+- [Training Plan](docs/training-plan.md)
+- [Architecture Decisions](docs/architecture-decisions.md)
+- [Model Card Template](docs/model-card-template.md)
+- [Release Checklist](docs/release-checklist.md)
+- [Contributing](CONTRIBUTING.md)
+
 ## Links
 
 - [Website](https://yoshidashingo.github.io/falcie/)
