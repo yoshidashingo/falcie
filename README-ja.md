@@ -25,6 +25,19 @@
 
 モデルウェイトは**近日公開予定**です。このリポジトリをウォッチしてアップデートをお待ちください。
 
+## プロジェクト計画
+
+このビジョンを、研究・データ・訓練・評価・公開の検証可能な作業へ分解した計画です。
+
+- [ロードマップ](docs/roadmap.md)
+- [評価計画](docs/evaluation-plan.md)
+- [データポリシー](docs/data-policy.md)
+- [訓練計画](docs/training-plan.md)
+- [アーキテクチャ決定ログ](docs/architecture-decisions.md)
+- [モデルカードテンプレート](docs/model-card-template.md)
+- [リリースチェックリスト](docs/release-checklist.md)
+- [コントリビュートガイド](CONTRIBUTING.md)
+
 ## リンク
 
 - [ウェブサイト](https://yoshidashingo.github.io/falcie/)
