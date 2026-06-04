@@ -53,8 +53,8 @@ runs/
 .cache/
 
 # Data directories
-data/
-datasets/
+/data/
+/datasets/
 
 # macOS
 .DS_Store

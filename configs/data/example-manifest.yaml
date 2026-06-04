@@ -1,0 +1,38 @@
+{
+  "name": "example-synthetic-corpus",
+  "version": "2026-06-04",
+  "source": "Synthetic example for schema validation only.",
+  "license": "NOT_APPLICABLE",
+  "license_review": "rejected",
+  "use": "pretraining",
+  "languages": [
+    "en",
+    "ja"
+  ],
+  "domains": [
+    "example",
+    "documentation"
+  ],
+  "estimated_tokens": 0,
+  "retrieval_script": "NOT_APPLICABLE",
+  "processing_config": "NOT_APPLICABLE",
+  "filters": [
+    "exact_dedup",
+    "pii_redaction",
+    "benchmark_contamination_check"
+  ],
+  "status": "rejected",
+  "pii_policy": {
+    "required": true,
+    "method": "Aggregate-only smoke validation; no raw data included.",
+    "status": "not_applicable"
+  },
+  "contamination_check": {
+    "required": true,
+    "method": "Aggregate-only smoke validation; no benchmark data included.",
+    "status": "not_applicable"
+  },
+  "reviewed_by": "fal'Cie maintainers",
+  "reviewed_at": "2026-06-04",
+  "notes": "This manifest is intentionally rejected because it is a synthetic example, not a real training source."
+}
