@@ -31,6 +31,7 @@ The current plan turns this vision into measurable research, data, training, eva
 
 - [Roadmap](docs/roadmap.md)
 - [Evaluation Plan](docs/evaluation-plan.md)
+- [Evaluation Harness](evals/README.md)
 - [Data Policy](docs/data-policy.md)
 - [Data Sources](docs/data-sources.md)
 - [Training Plan](docs/training-plan.md)

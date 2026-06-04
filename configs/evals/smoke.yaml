@@ -1,0 +1,42 @@
+{
+  "eval_id": "falcie-smoke-eval",
+  "version": "2026-06-04",
+  "description": "Dependency-free smoke evaluation config for validating evaluation harness shape before model integration.",
+  "model": {
+    "id": "not-yet-released",
+    "status": "coming_soon"
+  },
+  "tasks": [
+    {
+      "id": "japanese_instruction_shape",
+      "area": "japanese",
+      "type": "static_prompt_shape",
+      "prompt": "次の文章を一文で要約してください。",
+      "expected_behavior": "The runner must preserve Japanese prompt text and task metadata."
+    },
+    {
+      "id": "english_reasoning_shape",
+      "area": "reasoning",
+      "type": "static_prompt_shape",
+      "prompt": "Explain why reproducible evaluation matters for open-weight model releases.",
+      "expected_behavior": "The runner must preserve English prompt text and task metadata."
+    },
+    {
+      "id": "code_prompt_shape",
+      "area": "code",
+      "type": "static_prompt_shape",
+      "prompt": "Write a Python function that validates a dataset manifest.",
+      "expected_behavior": "The runner must preserve code-related prompt text and task metadata."
+    }
+  ],
+  "result_schema": {
+    "required_fields": [
+      "eval_id",
+      "version",
+      "model_id",
+      "commit_sha",
+      "tasks",
+      "summary"
+    ]
+  }
+}

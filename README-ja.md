@@ -31,6 +31,7 @@
 
 - [ロードマップ](docs/roadmap.md)
 - [評価計画](docs/evaluation-plan.md)
+- [評価ハーネス](evals/README.md)
 - [データポリシー](docs/data-policy.md)
 - [データソース](docs/data-sources.md)
 - [訓練計画](docs/training-plan.md)
