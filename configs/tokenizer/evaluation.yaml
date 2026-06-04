@@ -1,0 +1,41 @@
+{
+  "probe_file": "evals/tokenizer/probes.jsonl",
+  "required_domains": [
+    "japanese_prose",
+    "english_prose",
+    "mixed_technical",
+    "python_code",
+    "typescript_code",
+    "markdown",
+    "configuration"
+  ],
+  "metrics": [
+    {
+      "name": "tokens_per_character",
+      "description": "Primary compression metric once tokenizer candidates exist."
+    },
+    {
+      "name": "tokens_per_byte",
+      "description": "Language-agnostic compression metric for multilingual comparison."
+    },
+    {
+      "name": "unknown_or_byte_fallback_rate",
+      "description": "Tracks fallback behavior for non-ASCII, code symbols, and mixed scripts."
+    },
+    {
+      "name": "code_fragmentation_notes",
+      "description": "Manual inspection notes for identifiers, indentation, punctuation, and paths."
+    }
+  ],
+  "special_token_categories": [
+    "bos",
+    "eos",
+    "pad",
+    "system_role",
+    "user_role",
+    "assistant_role",
+    "tool_call",
+    "tool_result"
+  ],
+  "report_directory": "docs/tokenizers"
+}

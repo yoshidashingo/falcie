@@ -1,0 +1,7 @@
+{"id":"ja_prose_001","language":"ja","domain":"japanese_prose","text":"fal'Cieは、誰もが自分の環境で実行し、検証し、改良できるオープンウェイト言語モデルを目指します。"}
+{"id":"en_prose_001","language":"en","domain":"english_prose","text":"fal'Cie aims to become a frontier-grade open-weight language model that researchers and builders can run, inspect, fine-tune, and own."}
+{"id":"mixed_technical_001","language":"ja-en","domain":"mixed_technical","text":"評価 harness は README、model card、training config、data manifest を同じ commit SHA に紐づけます。"}
+{"id":"python_code_001","language":"code","domain":"python_code","text":"def load_manifest(path: Path) -> dict[str, Any]:\\n    return json.loads(path.read_text(encoding=\"utf-8\"))\\n"}
+{"id":"typescript_code_001","language":"code","domain":"typescript_code","text":"export function formatModelName(name: string): string {\\n  return name.trim().toLowerCase();\\n}\\n"}
+{"id":"markdown_001","language":"en","domain":"markdown","text":"## Release Gate\\n\\n- Evaluation report complete\\n- Model card complete\\n- Checksums published\\n"}
+{"id":"configuration_001","language":"config","domain":"configuration","text":"{\"model\":\"falcie-smoke\",\"context_length\":4096,\"license\":\"Apache-2.0\",\"weights\":\"coming-soon\"}"}
