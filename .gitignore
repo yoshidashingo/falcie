@@ -73,3 +73,6 @@ runs/
 
 # Brainstorming artifacts
 .superpowers/
+
+# AI agent session traces (absolute paths / local env info — never tracked)
+.omc/
