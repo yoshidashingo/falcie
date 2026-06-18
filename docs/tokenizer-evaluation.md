@@ -86,6 +86,22 @@ The initial probe set lives at `evals/tokenizer/probes.jsonl`.
 
 The probe set is not training data. It is a small evaluation fixture used to keep tokenizer comparisons stable.
 
+## Compression Scoring
+
+A dependency-free baseline scorer measures tokens-per-character and
+tokens-per-byte over the probe set:
+
+```bash
+python3 scripts/tokenizer/score_tokenizer.py --format md
+```
+
+It ships with reference tokenizers (`byte`, `char`, `whitespace`) that bound the
+compression space. The `byte` tokenizer is the canonical reference a real
+candidate must beat. Baseline results are recorded in
+[`tokenizers/baseline-reference.md`](tokenizers/baseline-reference.md). A real
+subword candidate is added by registering its encoder in the scorer's
+`TOKENIZERS` map, after which the same report applies to it.
+
 ## Candidate Report Format
 
 Each candidate report should include:
