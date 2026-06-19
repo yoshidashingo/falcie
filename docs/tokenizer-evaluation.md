@@ -102,6 +102,37 @@ candidate must beat. Baseline results are recorded in
 subword candidate is added by registering its encoder in the scorer's
 `TOKENIZERS` map, after which the same report applies to it.
 
+## BPE Candidates and Selection
+
+A dependency-free, clean-room **byte-level BPE** tokenizer
+(`scripts/tokenizer/bpe.py`) provides the first real subword candidate. It trains,
+encodes, decodes, and serializes with the standard library only; the byte-level
+base alphabet makes encoding lossless (`decode(encode(x)) == x` for all text),
+which is verified by property-based tests (`tests/test_bpe_pbt.py`).
+
+Train a candidate:
+
+```bash
+python3 scripts/tokenizer/train_bpe.py evals/tokenizer/probes.jsonl \
+    --vocab-size 1024 --output /tmp/falcie-bpe.json
+```
+
+Produce a selection report comparing the reference baselines against BPE
+candidates over the probe set:
+
+```bash
+python3 scripts/tokenizer/select_tokenizer.py
+```
+
+With the default corpus the BPE candidates are trained on the same probe texts
+they are scored on, so the report runs in **smoke mode**: it recommends *nothing*
+and explicitly discloses that each probe is memorized to ~1 token. This proves the
+selection pipeline end to end without overstating it. Pass `--corpus <held-out
+corpus>` to train on data disjoint from the probes — only then does the report emit
+an evidence-based recommendation and reach the M1 exit criterion ("tokenizer
+candidate is selected with evidence"). Output is written to
+[`tokenizers/selection-report.md`](tokenizers/selection-report.md) (and a JSON sibling).
+
 ## Candidate Report Format
 
 Each candidate report should include:
@@ -135,6 +166,10 @@ A tokenizer can be selected for M2 experiments only when:
 ## Immediate Implementation Tasks
 
 1. Keep `evals/tokenizer/probes.jsonl` small and stable.
-2. Add candidate-specific reports under `docs/tokenizers/`.
+2. ~~Add candidate-specific reports under `docs/tokenizers/`.~~ Done: baseline
+   reference + generated `selection-report.md`.
 3. Add tokenizer training configs under `configs/tokenizer/`.
-4. Add automated tokenizer scoring once a tokenizer library is selected.
+4. ~~Add automated tokenizer scoring once a tokenizer library is selected.~~ Done:
+   dependency-free byte-level BPE library + scorer + selection harness.
+5. Next: acquire a held-out training corpus and re-run selection on it; finalize
+   the special-token scheme (unit U-T4) and vocabulary size.

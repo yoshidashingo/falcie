@@ -153,11 +153,21 @@ def score(
     }
 
 
+def _rel(path: Path) -> str:
+    """Repo-relative string — committed reports must not embed absolute paths
+    (repo Git rule). Falls back to the basename for paths outside the repo."""
+    resolved = Path(path).resolve()
+    try:
+        return str(resolved.relative_to(ROOT))
+    except ValueError:
+        return resolved.name
+
+
 def render_markdown(reports: list[dict[str, Any]], probe_path: Path) -> str:
     lines: list[str] = []
     lines.append("# Tokenizer Compression Report")
     lines.append("")
-    lines.append(f"- probe_file: `{probe_path}`")
+    lines.append(f"- probe_file: `{_rel(probe_path)}`")
     lines.append(f"- probes: {reports[0]['probe_count']}")
     lines.append(f"- tokenizers: {', '.join(r['tokenizer'] for r in reports)}")
     lines.append("")
@@ -215,7 +225,7 @@ def main(argv: list[str]) -> int:
         output = render_markdown(reports, probe_path)
     else:
         payload = {
-            "probe_file": str(probe_path),
+            "probe_file": _rel(probe_path),
             "reports": reports,
         }
         output = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"

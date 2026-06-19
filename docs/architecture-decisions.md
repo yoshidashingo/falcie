@@ -77,6 +77,16 @@ Current direction:
 
 Run tokenizer bakeoffs before any non-smoke model training.
 
+Progress (M1, 2026-06-19): a dependency-free, clean-room byte-level BPE tokenizer
+(`scripts/tokenizer/bpe.py`) plus a training CLI (`scripts/tokenizer/train_bpe.py`)
+and a selection harness (`scripts/tokenizer/select_tokenizer.py`) now exist and
+emit a reproducible selection report (`docs/tokenizers/selection-report.md`). A
+byte-level base alphabet (256 byte tokens) was chosen so encoding is lossless —
+no unknown tokens, and `decode(encode(x)) == x` for all text — verified by
+property-based tests (`tests/test_bpe_pbt.py`). This is the bakeoff scaffolding;
+the final vocabulary size and training corpus remain Proposed pending a held-out
+training corpus and the full criteria in `tokenizer-evaluation.md`.
+
 ## ADR-004: Context Length Strategy
 
 Status: Proposed
@@ -107,3 +117,31 @@ Requirements:
 Current direction:
 
 Use safetensors-compatible release artifacts whenever possible.
+
+## ADR-006: Testing Strategy and Property-Based Testing
+
+Status: Accepted (for the dependency-free phase)
+
+Context:
+
+The repository is standard-library-only by policy, and the AI-DLC
+property-based-testing extension is enabled (full). PBT-09 would normally mandate
+Hypothesis, which is a third-party dependency and therefore disallowed in the
+current phase.
+
+Decision:
+
+- Use the stdlib `unittest` runner; tests live under `tests/` and run via
+  `python3 -m unittest discover -s tests` (wrapped by `scripts/run_checks.py`).
+- Provide a small dependency-free PBT harness (`tests/pbt.py`) supplying seedable
+  domain generators, automatic shrinking, and reproducible seeds — the
+  capabilities PBT-07/PBT-08 require — in place of Hypothesis.
+- Revisit and migrate to Hypothesis when the project adopts a dependency-managed
+  environment (e.g., alongside the training framework in ADR-001).
+
+Consequences:
+
+- Property-based and example-based tests coexist (PBT-10): see
+  `tests/test_bpe_pbt.py` and `tests/test_bpe_examples.py`.
+- The harness is intentionally minimal but sufficient for round-trip, invariant,
+  idempotence, and oracle properties of the current dependency-free units.

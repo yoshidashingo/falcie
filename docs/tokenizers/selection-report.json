@@ -1,0 +1,922 @@
+{
+  "commit_sha": "d1d7c6ccb43c217c535312737df7669a8b98cfc0",
+  "smoke": true,
+  "probe_file": "evals/tokenizer/probes.jsonl",
+  "train_corpus": "evals/tokenizer/probes.jsonl (probe texts; smoke)",
+  "probe_count": 7,
+  "candidates": [
+    {
+      "name": "byte",
+      "kind": "reference",
+      "round_trip_safe": true
+    },
+    {
+      "name": "char",
+      "kind": "reference",
+      "round_trip_safe": false
+    },
+    {
+      "name": "whitespace",
+      "kind": "reference",
+      "round_trip_safe": false
+    },
+    {
+      "name": "bpe-512",
+      "kind": "bpe",
+      "round_trip_safe": true,
+      "requested_vocab_sizes": [
+        512
+      ],
+      "effective_vocab_size": 512,
+      "learned_merges": 256,
+      "collapsed": false
+    },
+    {
+      "name": "bpe-1024",
+      "kind": "bpe",
+      "round_trip_safe": true,
+      "requested_vocab_sizes": [
+        1024,
+        2048
+      ],
+      "effective_vocab_size": 777,
+      "learned_merges": 521,
+      "collapsed": true
+    }
+  ],
+  "recommendation": {
+    "name": null,
+    "smoke": true,
+    "reason": "No candidate recommended: smoke run (BPE candidates were trained on the same probe texts they are scored on), so the numbers reflect memorization, not generalization. Re-run with `--corpus <held-out corpus>` for an evidence-based recommendation."
+  },
+  "smoke_evidence": {
+    "candidate": "bpe-1024",
+    "per_probe_tokens": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "note": "bpe-1024 encodes the 7 probes to [1, 1, 1, 1, 1, 1, 1] tokens — essentially one token per memorized probe, which is why tokens/byte looks near-zero. This is not a compression result."
+  },
+  "reports": [
+    {
+      "tokenizer": "byte",
+      "probe_count": 7,
+      "overall": {
+        "tokens": 780,
+        "chars": 660,
+        "bytes": 780,
+        "tokens_per_char": 1.1818,
+        "tokens_per_byte": 1.0
+      },
+      "by_language": {
+        "code": {
+          "tokens": 204,
+          "chars": 204,
+          "bytes": 204,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "config": {
+          "tokens": 93,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "en": {
+          "tokens": 229,
+          "chars": 229,
+          "bytes": 229,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "ja": {
+          "tokens": 139,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 2.7255,
+          "tokens_per_byte": 1.0
+        },
+        "ja-en": {
+          "tokens": 115,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 1.3855,
+          "tokens_per_byte": 1.0
+        }
+      },
+      "by_domain": {
+        "configuration": {
+          "tokens": 93,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "english_prose": {
+          "tokens": 134,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "japanese_prose": {
+          "tokens": 139,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 2.7255,
+          "tokens_per_byte": 1.0
+        },
+        "markdown": {
+          "tokens": 95,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "mixed_technical": {
+          "tokens": 115,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 1.3855,
+          "tokens_per_byte": 1.0
+        },
+        "python_code": {
+          "tokens": 107,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "typescript_code": {
+          "tokens": 97,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        }
+      },
+      "per_probe": [
+        {
+          "id": "ja_prose_001",
+          "language": "ja",
+          "domain": "japanese_prose",
+          "tokens": 139,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 2.7255,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "en_prose_001",
+          "language": "en",
+          "domain": "english_prose",
+          "tokens": 134,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "mixed_technical_001",
+          "language": "ja-en",
+          "domain": "mixed_technical",
+          "tokens": 115,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 1.3855,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "python_code_001",
+          "language": "code",
+          "domain": "python_code",
+          "tokens": 107,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "typescript_code_001",
+          "language": "code",
+          "domain": "typescript_code",
+          "tokens": 97,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "markdown_001",
+          "language": "en",
+          "domain": "markdown",
+          "tokens": 95,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "configuration_001",
+          "language": "config",
+          "domain": "configuration",
+          "tokens": 93,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        }
+      ]
+    },
+    {
+      "tokenizer": "char",
+      "probe_count": 7,
+      "overall": {
+        "tokens": 660,
+        "chars": 660,
+        "bytes": 780,
+        "tokens_per_char": 1.0,
+        "tokens_per_byte": 0.8462
+      },
+      "by_language": {
+        "code": {
+          "tokens": 204,
+          "chars": 204,
+          "bytes": 204,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "config": {
+          "tokens": 93,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "en": {
+          "tokens": 229,
+          "chars": 229,
+          "bytes": 229,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "ja": {
+          "tokens": 51,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 0.3669
+        },
+        "ja-en": {
+          "tokens": 83,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 0.7217
+        }
+      },
+      "by_domain": {
+        "configuration": {
+          "tokens": 93,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "english_prose": {
+          "tokens": 134,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "japanese_prose": {
+          "tokens": 51,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 0.3669
+        },
+        "markdown": {
+          "tokens": 95,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "mixed_technical": {
+          "tokens": 83,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 0.7217
+        },
+        "python_code": {
+          "tokens": 107,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        "typescript_code": {
+          "tokens": 97,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        }
+      },
+      "per_probe": [
+        {
+          "id": "ja_prose_001",
+          "language": "ja",
+          "domain": "japanese_prose",
+          "tokens": 51,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 0.3669
+        },
+        {
+          "id": "en_prose_001",
+          "language": "en",
+          "domain": "english_prose",
+          "tokens": 134,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "mixed_technical_001",
+          "language": "ja-en",
+          "domain": "mixed_technical",
+          "tokens": 83,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 0.7217
+        },
+        {
+          "id": "python_code_001",
+          "language": "code",
+          "domain": "python_code",
+          "tokens": 107,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "typescript_code_001",
+          "language": "code",
+          "domain": "typescript_code",
+          "tokens": 97,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "markdown_001",
+          "language": "en",
+          "domain": "markdown",
+          "tokens": 95,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        },
+        {
+          "id": "configuration_001",
+          "language": "config",
+          "domain": "configuration",
+          "tokens": 93,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 1.0,
+          "tokens_per_byte": 1.0
+        }
+      ]
+    },
+    {
+      "tokenizer": "whitespace",
+      "probe_count": 7,
+      "overall": {
+        "tokens": 59,
+        "chars": 660,
+        "bytes": 780,
+        "tokens_per_char": 0.0894,
+        "tokens_per_byte": 0.0756
+      },
+      "by_language": {
+        "code": {
+          "tokens": 16,
+          "chars": 204,
+          "bytes": 204,
+          "tokens_per_char": 0.0784,
+          "tokens_per_byte": 0.0784
+        },
+        "config": {
+          "tokens": 1,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.0108,
+          "tokens_per_byte": 0.0108
+        },
+        "en": {
+          "tokens": 30,
+          "chars": 229,
+          "bytes": 229,
+          "tokens_per_char": 0.131,
+          "tokens_per_byte": 0.131
+        },
+        "ja": {
+          "tokens": 1,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 0.0196,
+          "tokens_per_byte": 0.0072
+        },
+        "ja-en": {
+          "tokens": 11,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.1325,
+          "tokens_per_byte": 0.0957
+        }
+      },
+      "by_domain": {
+        "configuration": {
+          "tokens": 1,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.0108,
+          "tokens_per_byte": 0.0108
+        },
+        "english_prose": {
+          "tokens": 19,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 0.1418,
+          "tokens_per_byte": 0.1418
+        },
+        "japanese_prose": {
+          "tokens": 1,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 0.0196,
+          "tokens_per_byte": 0.0072
+        },
+        "markdown": {
+          "tokens": 11,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 0.1158,
+          "tokens_per_byte": 0.1158
+        },
+        "mixed_technical": {
+          "tokens": 11,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.1325,
+          "tokens_per_byte": 0.0957
+        },
+        "python_code": {
+          "tokens": 8,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 0.0748,
+          "tokens_per_byte": 0.0748
+        },
+        "typescript_code": {
+          "tokens": 8,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 0.0825,
+          "tokens_per_byte": 0.0825
+        }
+      },
+      "per_probe": [
+        {
+          "id": "ja_prose_001",
+          "language": "ja",
+          "domain": "japanese_prose",
+          "tokens": 1,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 0.0196,
+          "tokens_per_byte": 0.0072
+        },
+        {
+          "id": "en_prose_001",
+          "language": "en",
+          "domain": "english_prose",
+          "tokens": 19,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 0.1418,
+          "tokens_per_byte": 0.1418
+        },
+        {
+          "id": "mixed_technical_001",
+          "language": "ja-en",
+          "domain": "mixed_technical",
+          "tokens": 11,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.1325,
+          "tokens_per_byte": 0.0957
+        },
+        {
+          "id": "python_code_001",
+          "language": "code",
+          "domain": "python_code",
+          "tokens": 8,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 0.0748,
+          "tokens_per_byte": 0.0748
+        },
+        {
+          "id": "typescript_code_001",
+          "language": "code",
+          "domain": "typescript_code",
+          "tokens": 8,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 0.0825,
+          "tokens_per_byte": 0.0825
+        },
+        {
+          "id": "markdown_001",
+          "language": "en",
+          "domain": "markdown",
+          "tokens": 11,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 0.1158,
+          "tokens_per_byte": 0.1158
+        },
+        {
+          "id": "configuration_001",
+          "language": "config",
+          "domain": "configuration",
+          "tokens": 1,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.0108,
+          "tokens_per_byte": 0.0108
+        }
+      ]
+    },
+    {
+      "tokenizer": "bpe-512",
+      "probe_count": 7,
+      "overall": {
+        "tokens": 272,
+        "chars": 660,
+        "bytes": 780,
+        "tokens_per_char": 0.4121,
+        "tokens_per_byte": 0.3487
+      },
+      "by_language": {
+        "code": {
+          "tokens": 61,
+          "chars": 204,
+          "bytes": 204,
+          "tokens_per_char": 0.299,
+          "tokens_per_byte": 0.299
+        },
+        "config": {
+          "tokens": 31,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.3333,
+          "tokens_per_byte": 0.3333
+        },
+        "en": {
+          "tokens": 75,
+          "chars": 229,
+          "bytes": 229,
+          "tokens_per_char": 0.3275,
+          "tokens_per_byte": 0.3275
+        },
+        "ja": {
+          "tokens": 65,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 1.2745,
+          "tokens_per_byte": 0.4676
+        },
+        "ja-en": {
+          "tokens": 40,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.4819,
+          "tokens_per_byte": 0.3478
+        }
+      },
+      "by_domain": {
+        "configuration": {
+          "tokens": 31,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.3333,
+          "tokens_per_byte": 0.3333
+        },
+        "english_prose": {
+          "tokens": 48,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 0.3582,
+          "tokens_per_byte": 0.3582
+        },
+        "japanese_prose": {
+          "tokens": 65,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 1.2745,
+          "tokens_per_byte": 0.4676
+        },
+        "markdown": {
+          "tokens": 27,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 0.2842,
+          "tokens_per_byte": 0.2842
+        },
+        "mixed_technical": {
+          "tokens": 40,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.4819,
+          "tokens_per_byte": 0.3478
+        },
+        "python_code": {
+          "tokens": 31,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 0.2897,
+          "tokens_per_byte": 0.2897
+        },
+        "typescript_code": {
+          "tokens": 30,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 0.3093,
+          "tokens_per_byte": 0.3093
+        }
+      },
+      "per_probe": [
+        {
+          "id": "ja_prose_001",
+          "language": "ja",
+          "domain": "japanese_prose",
+          "tokens": 65,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 1.2745,
+          "tokens_per_byte": 0.4676
+        },
+        {
+          "id": "en_prose_001",
+          "language": "en",
+          "domain": "english_prose",
+          "tokens": 48,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 0.3582,
+          "tokens_per_byte": 0.3582
+        },
+        {
+          "id": "mixed_technical_001",
+          "language": "ja-en",
+          "domain": "mixed_technical",
+          "tokens": 40,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.4819,
+          "tokens_per_byte": 0.3478
+        },
+        {
+          "id": "python_code_001",
+          "language": "code",
+          "domain": "python_code",
+          "tokens": 31,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 0.2897,
+          "tokens_per_byte": 0.2897
+        },
+        {
+          "id": "typescript_code_001",
+          "language": "code",
+          "domain": "typescript_code",
+          "tokens": 30,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 0.3093,
+          "tokens_per_byte": 0.3093
+        },
+        {
+          "id": "markdown_001",
+          "language": "en",
+          "domain": "markdown",
+          "tokens": 27,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 0.2842,
+          "tokens_per_byte": 0.2842
+        },
+        {
+          "id": "configuration_001",
+          "language": "config",
+          "domain": "configuration",
+          "tokens": 31,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.3333,
+          "tokens_per_byte": 0.3333
+        }
+      ]
+    },
+    {
+      "tokenizer": "bpe-1024",
+      "probe_count": 7,
+      "overall": {
+        "tokens": 7,
+        "chars": 660,
+        "bytes": 780,
+        "tokens_per_char": 0.0106,
+        "tokens_per_byte": 0.009
+      },
+      "by_language": {
+        "code": {
+          "tokens": 2,
+          "chars": 204,
+          "bytes": 204,
+          "tokens_per_char": 0.0098,
+          "tokens_per_byte": 0.0098
+        },
+        "config": {
+          "tokens": 1,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.0108,
+          "tokens_per_byte": 0.0108
+        },
+        "en": {
+          "tokens": 2,
+          "chars": 229,
+          "bytes": 229,
+          "tokens_per_char": 0.0087,
+          "tokens_per_byte": 0.0087
+        },
+        "ja": {
+          "tokens": 1,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 0.0196,
+          "tokens_per_byte": 0.0072
+        },
+        "ja-en": {
+          "tokens": 1,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.012,
+          "tokens_per_byte": 0.0087
+        }
+      },
+      "by_domain": {
+        "configuration": {
+          "tokens": 1,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.0108,
+          "tokens_per_byte": 0.0108
+        },
+        "english_prose": {
+          "tokens": 1,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 0.0075,
+          "tokens_per_byte": 0.0075
+        },
+        "japanese_prose": {
+          "tokens": 1,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 0.0196,
+          "tokens_per_byte": 0.0072
+        },
+        "markdown": {
+          "tokens": 1,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 0.0105,
+          "tokens_per_byte": 0.0105
+        },
+        "mixed_technical": {
+          "tokens": 1,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.012,
+          "tokens_per_byte": 0.0087
+        },
+        "python_code": {
+          "tokens": 1,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 0.0093,
+          "tokens_per_byte": 0.0093
+        },
+        "typescript_code": {
+          "tokens": 1,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 0.0103,
+          "tokens_per_byte": 0.0103
+        }
+      },
+      "per_probe": [
+        {
+          "id": "ja_prose_001",
+          "language": "ja",
+          "domain": "japanese_prose",
+          "tokens": 1,
+          "chars": 51,
+          "bytes": 139,
+          "tokens_per_char": 0.0196,
+          "tokens_per_byte": 0.0072
+        },
+        {
+          "id": "en_prose_001",
+          "language": "en",
+          "domain": "english_prose",
+          "tokens": 1,
+          "chars": 134,
+          "bytes": 134,
+          "tokens_per_char": 0.0075,
+          "tokens_per_byte": 0.0075
+        },
+        {
+          "id": "mixed_technical_001",
+          "language": "ja-en",
+          "domain": "mixed_technical",
+          "tokens": 1,
+          "chars": 83,
+          "bytes": 115,
+          "tokens_per_char": 0.012,
+          "tokens_per_byte": 0.0087
+        },
+        {
+          "id": "python_code_001",
+          "language": "code",
+          "domain": "python_code",
+          "tokens": 1,
+          "chars": 107,
+          "bytes": 107,
+          "tokens_per_char": 0.0093,
+          "tokens_per_byte": 0.0093
+        },
+        {
+          "id": "typescript_code_001",
+          "language": "code",
+          "domain": "typescript_code",
+          "tokens": 1,
+          "chars": 97,
+          "bytes": 97,
+          "tokens_per_char": 0.0103,
+          "tokens_per_byte": 0.0103
+        },
+        {
+          "id": "markdown_001",
+          "language": "en",
+          "domain": "markdown",
+          "tokens": 1,
+          "chars": 95,
+          "bytes": 95,
+          "tokens_per_char": 0.0105,
+          "tokens_per_byte": 0.0105
+        },
+        {
+          "id": "configuration_001",
+          "language": "config",
+          "domain": "configuration",
+          "tokens": 1,
+          "chars": 93,
+          "bytes": 93,
+          "tokens_per_char": 0.0108,
+          "tokens_per_byte": 0.0108
+        }
+      ]
+    }
+  ]
+}
