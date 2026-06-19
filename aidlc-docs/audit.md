@@ -88,3 +88,17 @@ Refuted (no change): "run_checks omits unittest" (it includes it — gate shows 
 **Context**: CONSTRUCTION — Per-Unit Loop (first wave reviewed, fixed, re-verified)
 
 ---
+
+## Construction — Second Wave (Data Pipeline U-D1..U-D5)
+**Timestamp**: 2026-06-19T07:29:10Z
+**User Input**: "コミットして次の波も続ける (推奨)" (AskUserQuestion) — committed the first wave on branch `feat/m1-tokenizer-first-wave` (d352ac7, pushed) and proceeded to the data wave.
+**AI Response**: Implemented the M1 data pipeline as composable, dependency-free stdlib stages over a shared record contract:
+- shared `scripts/data/records.py` (frozen Record schema, idempotent `normalize_text`, content hash, `make_id`, char n-grams + Jaccard, JSONL read/write — hand-written and verified first).
+- U-D1 `ingest.py`, U-D2 `dedup.py`, U-D3 `filter.py`, U-D4 `contamination.py`, U-D5 `aggregate.py`, each with property + example tests. Built via a parallel workflow (5 agents over the pinned contract), then integrated with an end-to-end test (`tests/test_data_pipeline.py`, library + CLI chain).
+Independent adversarial review (workflow: 4 lenses + skeptic, mutation-tested) returned "ship-with-fixes": code was correct (0 violations over ~370k fuzz cases) but several PBT tests were *vacuous* (mutants survived because generators never reached the threshold/near-dup/repeat-line paths). Fixes applied:
+- Code: contamination decides on the rounded score (flag/score never disagree) + empty-benchmark guard + `type=Path`; `ingest --start-index` to keep same-source shards' ids disjoint + plain-text line model matched to `normalize_text`; `aggregate_paths` now raises on cross-file duplicate ids (consistent with `read_records`); dedup/filter docstring/dead-code cleanups.
+- Tests (hardened via a second parallel workflow, then independently mutation-verified by the main loop): contamination threshold monotonicity/boundary/consistency; dedup near-duplicate drop + boundary + CLI validation; filter repeat-line coverage; aggregate cross-file id-collision; ingest start-index + `_rel` out-of-repo fallback; contamination-meta survival through the chain.
+Verification: `python3 scripts/run_checks.py` → all 6 checks pass; **130 tests green**. Authoritative mutation test by the main loop: 6/6 core mutants (contamination threshold-ignored & `>=`→`>`, dedup near-dup disabled & `>=`→`>`, filter repeat-line disabled, aggregate dup-id raise removed) are now KILLED — the gate can say "no". stdlib-only and zero absolute paths confirmed. Added `docs/data-pipeline.md`. No commit/push yet for this wave.
+**Context**: CONSTRUCTION — Per-Unit Loop (data wave complete: implemented, reviewed, fixed, mutation-verified)
+
+---

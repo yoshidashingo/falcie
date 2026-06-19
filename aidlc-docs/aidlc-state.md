@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-06-16T06:24:39Z
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: Per-Unit Loop — first wave (U-I5, U-T1, U-T2, U-T3, U-I6) implemented + verified (all gates green)
+- **Current Stage**: Per-Unit Loop — tokenizer wave (U-I5, U-T1–U-T3, U-I6) + data wave (U-D1–U-D5 + shared records) implemented, independently reviewed, mutation-verified (all gates green)
 - **Invocation Mode**: opt-in `/aidlc` (this task only; does not override normal requests)
 - **Original Request**: "最強のLLMモデルをつくりたい" (build the strongest LLM model)
 
@@ -62,8 +62,15 @@ See `docs/architecture-decisions.md` ADR-006.
   - [x] U-T2 BPE training CLI (`scripts/tokenizer/train_bpe.py`)
   - [x] U-T3 tokenizer selection report (`scripts/tokenizer/select_tokenizer.py` → `docs/tokenizers/selection-report.md`) — selection pipeline complete; **M1 exit criterion reachable** via `--corpus` (held-out corpus pending; the default smoke run honestly recommends nothing)
   - [x] U-I6 verification gate runner (`scripts/run_checks.py`)
+- Data wave (implemented + reviewed + mutation-verified, all gates green):
+  - [x] shared `scripts/data/records.py` (Record schema, normalize, hashing, n-gram/Jaccard, JSONL IO)
+  - [x] U-D1 ingest (`scripts/data/ingest.py`) + `--start-index` shard offsets
+  - [x] U-D2 dedup (`scripts/data/dedup.py`) exact + near-duplicate
+  - [x] U-D3 filter (`scripts/data/filter.py`) config-driven heuristics
+  - [x] U-D4 contamination (`scripts/data/contamination.py`) flag/remove vs benchmarks
+  - [x] U-D5 aggregate (`scripts/data/aggregate.py`) corpus report + cross-file id-uniqueness
+  - [x] end-to-end integration test (`tests/test_data_pipeline.py`); see `docs/data-pipeline.md`
 - Remaining waves (planned, not started):
-  - [ ] Data workstream: U-D1 ingest, U-D2 dedup, U-D3 filter, U-D4 contamination, U-D5 aggregate
   - [ ] Infra: U-I1 config+hash, U-I2 checkpoint metadata, U-I3 dataset loader, U-I4 mock eval hook
   - [ ] Tokenizer: U-T4 special-token scheme
 - [ ] Build and Test (formal stage — gate currently runs via `scripts/run_checks.py`)
