@@ -5,7 +5,7 @@
 - **Project Type**: Brownfield
 - **Start Date**: 2026-06-16T06:24:39Z
 - **Current Phase**: CONSTRUCTION
-- **Current Stage**: Per-Unit Loop — tokenizer wave (U-I5, U-T1–U-T3, U-I6) + data wave (U-D1–U-D5 + shared records) implemented, independently reviewed, mutation-verified (all gates green)
+- **Current Stage**: Per-Unit Loop — all M1 + Stage 0–1 units (tokenizer, data, infra) implemented, independently reviewed, mutation-verified (8-check gate green, 206 tests)
 - **Invocation Mode**: opt-in `/aidlc` (this task only; does not override normal requests)
 - **Original Request**: "最強のLLMモデルをつくりたい" (build the strongest LLM model)
 
@@ -70,10 +70,19 @@ See `docs/architecture-decisions.md` ADR-006.
   - [x] U-D4 contamination (`scripts/data/contamination.py`) flag/remove vs benchmarks
   - [x] U-D5 aggregate (`scripts/data/aggregate.py`) corpus report + cross-file id-uniqueness
   - [x] end-to-end integration test (`tests/test_data_pipeline.py`); see `docs/data-pipeline.md`
-- Remaining waves (planned, not started):
-  - [ ] Infra: U-I1 config+hash, U-I2 checkpoint metadata, U-I3 dataset loader, U-I4 mock eval hook
-  - [ ] Tokenizer: U-T4 special-token scheme
-- [ ] Build and Test (formal stage — gate currently runs via `scripts/run_checks.py`)
+- Infra wave (implemented + reviewed [verdict: ship] + mutation-verified, all gates green):
+  - [x] U-I1 config loader + content hashing (`scripts/common/config.py`)
+  - [x] U-I2 checkpoint metadata + schema (`scripts/training/checkpoint_meta.py`, `configs/training/checkpoint.schema.yaml`) — strict (rejects unknown fields)
+  - [x] U-I3 minimal resumable dataset loader (`scripts/data/loader.py`)
+  - [x] U-I4 mock/tiny-model eval hook (`scripts/evals/run_mock_eval.py`)
+  - [x] U-T4 special-token scheme (`scripts/tokenizer/special_tokens.py`)
+- [x] Build and Test — single-command gate `scripts/run_checks.py` (8 checks: validate_manifest, smoke_eval,
+  summarize_probes, score_tokenizer, select_tokenizer, special_tokens, mock_eval, unit_tests / 206 tests)
+
+**M1 + Stage 0–1 construction complete.** All 16 planned units are implemented, independently reviewed, and
+mutation-verified. Next candidate work (future iterations, not yet scoped): real held-out corpora for tokenizer
+selection (M1 exit) and data, then M2 (sub-1B experimental models) which needs a training framework decision (ADR-001)
+and is out of the current dependency-free scope.
 
 ### OPERATIONS
 - [ ] Operations (placeholder)

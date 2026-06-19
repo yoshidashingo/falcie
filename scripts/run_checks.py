@@ -27,6 +27,8 @@ CHECKS: list[tuple[str, list[str]]] = [
     ("summarize_probes", [PY, "scripts/tokenizer/summarize_probes.py"]),
     ("score_tokenizer", [PY, "scripts/tokenizer/score_tokenizer.py"]),
     ("select_tokenizer", [PY, "scripts/tokenizer/select_tokenizer.py", "--no-write"]),
+    ("special_tokens", [PY, "scripts/tokenizer/special_tokens.py"]),
+    ("mock_eval", [PY, "scripts/evals/run_mock_eval.py"]),
     ("unit_tests", [PY, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]),
 ]
 

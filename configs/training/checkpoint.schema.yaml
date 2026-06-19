@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yoshidashingo/falcie/configs/training/checkpoint.schema.yaml",
+  "title": "fal'Cie Checkpoint Metadata",
+  "description": "Reproducibility metadata recorded alongside every training checkpoint (see docs/training-plan.md 'Checkpoint Metadata').",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "model_name",
+    "model_size",
+    "architecture",
+    "tokenizer_version",
+    "training_token_count",
+    "dataset_manifest_hash",
+    "training_config_hash",
+    "commit_sha",
+    "license",
+    "intended_status"
+  ],
+  "properties": {
+    "model_name": {
+      "type": "string",
+      "description": "Human-readable model name.",
+      "minLength": 1
+    },
+    "model_size": {
+      "type": "string",
+      "description": "Parameter scale label, e.g. \"0.5B\".",
+      "minLength": 1
+    },
+    "architecture": {
+      "type": "object",
+      "description": "Architecture config (layers, hidden size, heads, etc.)."
+    },
+    "tokenizer_version": {
+      "type": "string",
+      "description": "Versioned identifier of the tokenizer artifact.",
+      "minLength": 1
+    },
+    "training_token_count": {
+      "type": "integer",
+      "description": "Total tokens seen during training.",
+      "minimum": 0
+    },
+    "dataset_manifest_hash": {
+      "type": "string",
+      "description": "SHA-256 of the dataset manifest file (config.file_hash).",
+      "minLength": 1
+    },
+    "training_config_hash": {
+      "type": "string",
+      "description": "SHA-256 of the canonical training config (config.config_hash).",
+      "minLength": 1
+    },
+    "commit_sha": {
+      "type": "string",
+      "description": "Git commit SHA of the repository at training time.",
+      "minLength": 1
+    },
+    "license": {
+      "type": "string",
+      "description": "License under which the checkpoint is released.",
+      "minLength": 1
+    },
+    "intended_status": {
+      "type": "string",
+      "description": "Lifecycle stage the checkpoint is intended for.",
+      "enum": [
+        "experiment",
+        "candidate",
+        "release"
+      ]
+    }
+  }
+}

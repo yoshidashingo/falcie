@@ -102,3 +102,16 @@ Verification: `python3 scripts/run_checks.py` → all 6 checks pass; **130 tests
 **Context**: CONSTRUCTION — Per-Unit Loop (data wave complete: implemented, reviewed, fixed, mutation-verified)
 
 ---
+
+## Construction — Third Wave (Infra U-I1..U-I4 + U-T4) + M1 Construction Complete
+**Timestamp**: 2026-06-19T08:21:25Z
+**User Input**: "インフラ波を続ける (推奨)" (AskUserQuestion, after the tokenizer + data waves were committed).
+**AI Response**: Implemented the infrastructure wave, dependency-free stdlib:
+- U-I1 `scripts/common/config.py` (load_config, canonical_json, key-order-invariant config_hash, file_hash) — hand-written and verified first as the shared contract.
+- U-I2 `scripts/training/checkpoint_meta.py` + `configs/training/checkpoint.schema.yaml` (validate/build/save/load/hashes_for); U-I3 `scripts/data/loader.py` (bounded reservoir shuffle: deterministic by (seed,buffer), resumable, permutation); U-I4 `scripts/evals/run_mock_eval.py` (deterministic mock model + trivial metric, reuses run_smoke_eval); U-T4 `scripts/tokenizer/special_tokens.py` (SPECIAL_TOKENS, build_tokenizer, format_chat, encode_chat). Built via a parallel workflow (4 agents over the pinned contracts), each self-verified.
+- Wired `special_tokens` and `mock_eval` into `scripts/run_checks.py` (now 8 checks) and added `docs/data-pipeline.md` earlier.
+Independent adversarial review (workflow: 4 lenses + skeptic, mutation-tested) returned **"ship"** — the strongest verdict so far. Only one actionable finding (medium): the checkpoint schema declared `additionalProperties: false` but `validate_metadata` silently accepted unknown/typo'd fields and the parity test never checked it. Fixed: `validate_metadata` now rejects unexpected fields; `test_checkpoint_meta.py` asserts an unknown field fails and that the schema's `additionalProperties`/`properties` match the validator. All other lens findings were refuted as equivalent mutants (capacity-1 reservoir == identity; `bool(out)`==`bool(out.strip())` for reachable mock outputs), by-design (hardcoded category→token strings pinned by a drift test; KeyError on bad chat role is documented), or out-of-scope (a pre-existing absolute-path banner in summarize_probes; eval_id/version type-safety in the shared validator).
+Verification: `python3 scripts/run_checks.py` → all 8 checks pass; **206 tests green**; zero absolute paths; the earlier discovery-ordering bug in test_checkpoint_meta confirmed fixed (file_hash inside the temp-dir block). Authoritative mutation test by the main loop: unknown-field rejection, missing-field check, loader shuffle, and mock-eval metric mutants all KILLED. **M1 + training-plan Stage 0–1 construction is complete: all 16 planned units implemented, independently reviewed, mutation-verified.** Committing on branch `feat/m1-tokenizer-first-wave` (no push beyond the branch without further instruction).
+**Context**: CONSTRUCTION — Per-Unit Loop (infra wave complete; M1 construction complete)
+
+---
