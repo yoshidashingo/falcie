@@ -9,6 +9,65 @@ entries short; link to PRs/commits/ADRs for detail.
 
 ---
 
+## L-006 — M2 implementation plan (owner decision artifact)
+
+- **Status:** passed
+- **Owner:** Shingo YOSHIDA
+- **Opened / Closed:** 2026-06-20 / 2026-06-20
+- **Goal:** Turn the M2 "go/no-go" into "approve this plan." Synthesize the
+  committed evidence (L-002 recipe research, L-003 tokenizer/vocab, L-005 BPB eval)
+  + the ADRs + roadmap M2 into a concrete, research-grounded **proposal** for the
+  first real (sub-1B / 1B dense) models: architecture, tokenizer, data curriculum,
+  training recipe, eval, checkpointing — and the explicit owner decisions and
+  resources M2 *execution* requires (it leaves the dependency-free phase).
+- **Inputs:** `docs/roadmap.md` (M2), `docs/architecture-decisions.md`
+  (ADR-001..006), `docs/research/open-weight-recipes.md`,
+  `docs/tokenizers/vocab-bakeoff-report.md`, `docs/evals/lm-baseline-report.md`,
+  `docs/training-plan.md`, `docs/data-pipeline.md`, `docs/evaluation-plan.md`.
+- **Acceptance criteria:**
+  - [x] `docs/m2-plan.md` exists: a concrete M2 plan (recommended dense architecture
+        + the OLMo-2 stability stack, ~3 model sizes, tokenizer/vocab, 2-stage data
+        curriculum, AdamW recipe, context strategy, BPB+scored eval cadence,
+        safetensors checkpoints) — every recommendation cites the ADR/research that
+        backs it.
+  - [x] A clear **"Decisions required"** section (framework/ADR-001, dependency
+        adoption/ADR-006, compute & budget) and a rough compute estimate, so the
+        owner can approve or redirect.
+  - [x] A staged **task breakdown** mapping to roadmap M2 exit criteria
+        (resume-from-checkpoint, automatic eval, model-card draft).
+  - [x] It is a **proposal**, not a decision: it does not flip any ADR; M2 execution
+        stays an explicit owner go/no-go.
+  - [x] Internally consistent with the rest of `docs/`; relative links resolve;
+        `python3 scripts/run_checks.py` exits 0 (docs-only change is safe).
+- **Forbidden zones:** flipping ADRs or starting M2 *execution* (no framework/deps/
+  training); overstating the baseline or any capability.
+- **Evidence:** the doc; gate output; link/consistency check; independent critic pass.
+- **Stop conditions:** pass per criteria; **handoff** — M2 execution is the owner's
+  go/no-go after this plan; timeout as usual.
+- **Verification:** gate green (`all 11 checks passed`); all 10 relative links
+  resolve; internally consistent with `roadmap.md`/`training-plan.md`/the ADRs.
+  Independent critic (separate context) = **APPROVE-WITH-NITS**: grounding,
+  consistency, scope-discipline, and honesty all PASS; it independently recomputed
+  the compute estimate (908–1333 GPU-h, confirming ~1000). Three objective nits
+  fixed: falcie-1b param count (~1.2B -> ~0.9B, matching its own dims), GPU-hours/days
+  alignment, and ADR-006's "Accepted-for-dependency-free-phase" status; added a
+  divergence-recovery note and the rationale for the full stability stack at small scale.
+- **Lessons:**
+  - Plan-as-decision-artifact: synthesizing the committed evidence (L-002/L-003/L-005
+    + ADRs) into one concrete proposal turns an open "go/no-go" into an approvable
+    artifact and cleanly isolates the genuinely owner-gated calls (framework, deps,
+    compute). A proposal must *recommend* ADR promotion, never flip the ADR.
+  - Even a docs/plan benefits from an independent pass that **recomputes the numbers** —
+    the critic caught a param-count-vs-dimensions mismatch and a GPU-hours/days slip
+    that internal review would likely have waved through.
+  - **The dependency-free loop has reached its productive ceiling.** Foundation,
+    research, tokenizer, eval harness, baseline model, and the M2 plan are all
+    shipped. The next substantive step — M2 *execution* (real neural models) — is the
+    owner's go/no-go (framework + dependency adoption + compute), and cannot be made
+    autonomously. Further dependency-free loops would be motion, not progress.
+
+---
+
 ## L-005 — Baseline n-gram LM + bits-per-byte eval (first end-to-end evaluable member)
 
 - **Status:** passed
