@@ -1,0 +1,7 @@
+{"id": "ja_capital", "area": "knowledge", "language": "ja", "prompt": "日本の首都はどこですか。地名だけ答えてください。", "answer": "東京", "metric": "normalized_match"}
+{"id": "ja_arith", "area": "math", "language": "ja", "prompt": "3 たす 4 はいくつですか。数字で答えてください。", "answer": "7", "metric": "numeric_match"}
+{"id": "en_capital", "area": "knowledge", "language": "en", "prompt": "What is the capital of France? Answer with the city name only.", "answer": "Paris", "metric": "normalized_match"}
+{"id": "en_prime_mc", "area": "reasoning", "language": "en", "prompt": "Which of these is a prime number? A) 4 B) 6 C) 7 D) 8", "answer": "C", "metric": "multiple_choice", "choices": ["A", "B", "C", "D"]}
+{"id": "en_mult", "area": "math", "language": "en", "prompt": "What is 12 times 12?", "answer": "144", "metric": "numeric_match"}
+{"id": "code_add_def", "area": "code", "language": "code", "prompt": "Write a Python function named add that takes a and b and returns their sum. Include the def line.", "answer": "def add", "metric": "includes"}
+{"id": "instr_done", "area": "instruction", "language": "en", "prompt": "Reply with exactly the word DONE and nothing else.", "answer": "DONE", "metric": "exact_match"}

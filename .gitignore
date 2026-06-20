@@ -56,6 +56,9 @@ runs/
 /data/
 /datasets/
 
+# Generated evaluation result outputs (regenerated from pinned suites + model)
+/evals/results/
+
 # macOS
 .DS_Store
 .AppleDouble

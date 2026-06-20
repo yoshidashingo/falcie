@@ -29,6 +29,8 @@ CHECKS: list[tuple[str, list[str]]] = [
     ("select_tokenizer", [PY, "scripts/tokenizer/select_tokenizer.py", "--no-write"]),
     ("special_tokens", [PY, "scripts/tokenizer/special_tokens.py"]),
     ("mock_eval", [PY, "scripts/evals/run_mock_eval.py"]),
+    ("scored_eval_gold", [PY, "scripts/evals/run_eval.py", "--predictor", "gold", "--assert-accuracy", "1.0"]),
+    ("scored_eval_empty", [PY, "scripts/evals/run_eval.py", "--predictor", "empty", "--assert-accuracy", "0.0"]),
     ("unit_tests", [PY, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]),
 ]
 

@@ -100,8 +100,23 @@ Each evaluated checkpoint should publish:
 
 ## Initial Implementation Tasks
 
-1. Create `evals/README.md` with benchmark inventory.
-2. Add a machine-readable evaluation config format.
-3. Add a script that runs a tiny smoke evaluation on a mock or small local model.
-4. Add a result schema for score reports.
-5. Require evaluation output before any release tag.
+1. ~~Create `evals/README.md` with benchmark inventory.~~ Done.
+2. ~~Add a machine-readable evaluation config format.~~ Done (`configs/evals/smoke.yaml`
+   shape config; `evals/suites/*.jsonl` scored-task format).
+3. ~~Add a script that runs a tiny smoke evaluation on a mock or small local
+   model.~~ Done (`run_smoke_eval.py` shape, `run_mock_eval.py` mock scoring path).
+4. ~~Add a result schema for score reports.~~ Done (L-004): `scripts/evals/harness.py`
+   produces a versioned report (harness version, model id, commit, accuracy overall +
+   by area/language, known failures) scored by real metrics (`scripts/evals/metrics.py`).
+5. Require evaluation output before any release tag — enforceable now: the harness
+   self-checks in `scripts/run_checks.py` (gold predictor must score 1.0, empty 0.0),
+   so a release gate can require a scored report from `run_eval.py` once a model exists.
+
+## Scored Harness (L-004)
+
+`scripts/evals/run_eval.py` runs a predictor over a scored suite
+(`evals/suites/smoke-scored.jsonl`) and emits the report above. A predictor is
+`Callable[[task], str]`; reference predictors (`gold`/`empty`/`echo`) validate the
+harness without a model. Suites under `evals/suites/` are harness fixtures, not
+benchmarks (no contamination risk). When a real model lands, plug its `predict`
+into the harness — the scoring, aggregation, and report shape are already in place.

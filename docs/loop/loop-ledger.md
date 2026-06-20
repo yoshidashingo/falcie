@@ -9,6 +9,60 @@ entries short; link to PRs/commits/ADRs for detail.
 
 ---
 
+## L-004 — Scored evaluation harness ("evaluable" core)
+
+- **Status:** passed
+- **Owner:** Shingo YOSHIDA
+- **Opened / Closed:** 2026-06-20 / 2026-06-20
+- **Goal:** Make the model series *evaluable*: today the eval scaffolding only
+  validates config shape (`run_smoke_eval`) and runs a trivial "non-empty output"
+  metric (`run_mock_eval`). Add a real scored harness that compares a predictor's
+  output to a known answer with real metrics and aggregates per area/language —
+  the roadmap's "build the evaluation harness before training the first model."
+- **Inputs:** `docs/evaluation-plan.md` (layers, reporting format, anti-contamination),
+  `evals/README.md`, existing `scripts/evals/*`, `configs/evals/smoke.yaml`.
+- **Acceptance criteria:**
+  - [x] `scripts/evals/metrics.py`: dependency-free metric registry (exact_match,
+        normalized_match, multiple_choice, numeric_match, includes) with unit tests.
+  - [x] `scripts/evals/harness.py` + `run_eval.py`: run a predictor over a scored
+        suite, aggregate accuracy overall + by area + by language, emit a report
+        (model id, harness version, commit, score table, per-task pass/fail).
+  - [x] `evals/suites/smoke-scored.jsonl`: a small scored multi-area suite (JP / EN
+        / code / math / instruction), clearly labeled **harness fixtures, not
+        benchmarks**, with an anti-contamination note.
+  - [x] Built-in reference predictors prove the harness scores correctly: a **gold**
+        predictor scores 1.0, an **empty** predictor scores 0.0, with per-area
+        breakdown — the harness is validated without a real model.
+  - [x] `python3 scripts/run_checks.py` exits 0 with a fast scored-smoke wired in.
+  - [x] `evals/README.md` + `docs/evaluation-plan.md` updated (tasks marked done).
+- **Forbidden zones:** committing private/benchmark datasets; claiming real model
+  capability (no model exists yet); any third-party dependency.
+- **Evidence:** the harness report (gold=1.0 / empty=0.0), gate output, reviewer pass.
+- **Stop conditions:** pass per criteria; handoff if it turns out to need a real
+  model (it must not — reference predictors stand in); timeout as usual.
+- **Verification:** gate green (`all 10 checks passed`, incl. `scored_eval_gold`
+  asserting accuracy 1.0 and `scored_eval_empty` asserting 0.0; 32 harness/metric
+  tests). Independent code-reviewer (separate context, ran the gate itself): first
+  APPROVE-WITH-NITS (2 MEDIUM + 5 LOW), then **APPROVE** after the fixes —
+  adversarial metric probing confirmed no false-positive path remains.
+- **Lessons:**
+  - The harness's value is the *gold→1.0 / empty→0.0* self-check: it proves a
+    scorer is wired correctly **without a model**. Make such invariants structural
+    (load_suite rejects empty answers) rather than incidental, so they can't
+    silently weaken as suites grow.
+  - Automated scoring metrics must be *precision-first*: the reviewer caught a
+    classic multiple-choice extraction trap (prose "A quick fox" scored as choosing
+    A). The fix refuses to guess (single-letter / explicit cue / paren only) — for
+    answer-checking, a false negative is far safer than a false positive.
+  - Validate at ingestion, not at scoring time (choices membership checked in
+    load_suite), so a malformed suite fails fast.
+  - Next: when a real model exists (M2+), register its `predict(task) -> str` in
+    place of a reference predictor — scoring/aggregation/report are already in
+    place. Expand suites (public benchmarks where licensing permits + a private
+    regression set per `evaluation-plan.md`).
+
+---
+
 ## L-003 — Tokenizer vocab-size bakeoff (JP fertility evidence for ADR-003)
 
 - **Status:** passed
