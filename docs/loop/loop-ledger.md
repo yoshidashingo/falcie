@@ -9,6 +9,56 @@ entries short; link to PRs/commits/ADRs for detail.
 
 ---
 
+## L-008 — Needle-in-a-haystack long-context eval
+
+- **Status:** passed
+- **Owner:** Shingo YOSHIDA
+- **Opened / Closed:** 2026-06-21 / 2026-06-21
+- **Goal:** Add the long-context retrieval evaluation axis the roadmap, `m2-plan.md`,
+  and ADR-004 all call for (context extension must be validated with needle-in-a-
+  haystack). Dependency-free: synthesize NIAH tasks (a unique "needle" fact embedded
+  in filler at a given depth, with a retrieval question) and score a predictor across
+  a length × depth grid, producing a retrieval matrix. Ready for a real model (M2+) to
+  plug into; reference predictors validate it without a model.
+- **Inputs:** `scripts/evals/metrics.py` (includes/exact), `scripts/evals/harness.py`,
+  `docs/evaluation-plan.md`, `docs/architecture-decisions.md` (ADR-004), `docs/m2-plan.md`.
+- **Acceptance criteria:**
+  - [x] `scripts/evals/niah.py` (stdlib): deterministic NIAH task generation over a
+        length × depth grid (needle embedded at the right depth; answer retrievable),
+        and a runner aggregating retrieval accuracy **by length and by depth**.
+  - [x] Reference predictors validate the harness without a model: **gold** retrieves
+        every needle (accuracy 1.0), **empty** retrieves none (0.0), and a
+        **prefix-window** stand-in shows real structure (retrieves short/shallow,
+        misses long/deep) — proving the matrix isn't trivially flat.
+  - [x] `python3 scripts/run_checks.py` exits 0 with a NIAH smoke wired in (gold=1.0).
+  - [x] Unit tests: task-gen correctness (needle present, answer retrievable),
+        gold=1.0 / empty=0.0, window predictor's length×depth structure, determinism.
+  - [x] `evals/README.md` / `docs/evaluation-plan.md` note the long-context (NIAH) layer.
+- **Forbidden zones:** committing large generated corpora; claiming model capability;
+  any third-party dependency.
+- **Evidence:** the retrieval matrix (gold=1.0, empty=0.0, window structured); gate;
+  reviewer pass.
+- **Stop conditions:** pass per criteria; timeout as usual.
+- **Verification:** gate green (`all 13 checks passed`, incl. `niah_smoke` asserting
+  gold accuracy 1.0; 9 NIAH tests). Independent code-reviewer (separate context, ran
+  the eval + adversarial tautology/false-positive probes): **APPROVE-WITH-NITS** —
+  both required gates PASS: the matrix has real length×depth structure (window stand-in
+  0.8, long-context degrades by depth) and there are no false-positive needle matches
+  from filler; the eval is anti-tautological (the answer is in the prompt and vanishes
+  when the needle is removed). Its MEDIUM (id collision on sub-1% depths) + LOWs
+  (duplicate-cell overwrite, unused ROOT) were then fixed: lossless depth ids +
+  dedup/sort of the grid, with regression tests.
+- **Lessons:**
+  - A NIAH eval is only worth anything if it is (1) **anti-tautological** — the answer
+    is embedded in the prompt and provably absent once the needle is removed — and
+    (2) **non-flat** — a model-free `window` predictor must show real length×depth
+    structure, so the gate would catch a regression that flattened the eval.
+  - Deterministic synthesis (sha1, no RNG) keeps the eval reproducible in the gate.
+  - When a grid is parameterized, make cell ids lossless and dedup the grid, or two
+    near-equal coordinates silently conflate.
+
+---
+
 ## L-007 — Decontamination wiring (M2 data prerequisite)
 
 - **Status:** passed

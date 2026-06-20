@@ -139,3 +139,14 @@ closing the data -> tokenizer -> model -> eval loop end to end. See
 [`evals/lm-baseline-report.md`](evals/lm-baseline-report.md). A real model (M2+)
 plugs into the same BPB metric; the raw corpus and trained model are not committed
 (regenerable via `scripts/data/fetch_corpus.py` + `scripts/evals/lm_eval.py`).
+
+## Long-Context Evaluation — needle-in-a-haystack (L-008)
+
+Context extension must be validated, not assumed (ADR-004 gates it on
+needle-in-a-haystack). `scripts/evals/niah.py` synthesizes NIAH tasks — a unique
+needle fact embedded in filler at a chosen depth, with a retrieval question — and
+scores a predictor across a **length x depth grid**, producing a retrieval matrix.
+Reference predictors validate the eval without a model: `gold` retrieves every
+needle (1.0), `empty` none (0.0), and a `window:<N>` prefix stand-in shows real
+length x depth structure (short/shallow found, long/deep missed). A real model (M2+)
+plugs in as the predictor when context extension is tested.

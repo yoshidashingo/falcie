@@ -34,6 +34,7 @@ CHECKS: list[tuple[str, list[str]]] = [
     ("lm_eval_smoke", [PY, "scripts/evals/lm_eval.py", "--corpus", "evals/tokenizer/probes.jsonl",
                        "--smoke", "--orders", "0", "2", "--assert-max-bpb", "8.0"]),
     ("benchmark_index", [PY, "scripts/data/build_benchmark_index.py", "--check"]),
+    ("niah_smoke", [PY, "scripts/evals/niah.py", "--predictor", "gold", "--assert-accuracy", "1.0"]),
     ("unit_tests", [PY, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]),
 ]
 

@@ -79,6 +79,20 @@ The first member is a dependency-free byte n-gram baseline
 ~2.18 bits/byte on the held-out public-domain corpus. The committed report lives in
 `docs/evals/`; the corpus and trained model are not committed (regenerable).
 
+## Long-Context Evaluation (needle-in-a-haystack)
+
+`scripts/evals/niah.py` evaluates long-context retrieval: it embeds a unique needle
+fact in filler at a chosen depth and scores a predictor across a length x depth grid,
+emitting a retrieval matrix (ADR-004 gates context extension on this).
+
+```bash
+python3 scripts/evals/niah.py --predictor gold    # reference: 1.0
+python3 scripts/evals/niah.py --predictor window --window 1500 --format md  # structured
+```
+
+Reference predictors (`gold`/`empty`/`window:<N>`) validate the eval without a model;
+a real model plugs in as the predictor when context extension is tested.
+
 ## Release Gate
 
 No model checkpoint should be released until:
