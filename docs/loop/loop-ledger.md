@@ -9,6 +9,59 @@ entries short; link to PRs/commits/ADRs for detail.
 
 ---
 
+## L-007 — Decontamination wiring (M2 data prerequisite)
+
+- **Status:** passed
+- **Owner:** Shingo YOSHIDA
+- **Opened / Closed:** 2026-06-20 / 2026-06-21
+- **Goal:** Make "decontaminate the training corpus against the eval set" a real,
+  runnable, gated step before any M2 training. `data-policy.md` and
+  `evaluation-plan.md` both require it; today `contamination.py` only defaults to the
+  tokenizer probe fixture and reads a single `text` field, so the scored-suite
+  prompts/answers aren't protected and there is no canonical "do-not-train-on-these"
+  set. This is a framework-agnostic, fully-unblocked M2 prerequisite (chosen over
+  speculative model configs, which depend on the still-open framework decision).
+- **Inputs:** `scripts/data/contamination.py`, `evals/tokenizer/probes.jsonl`,
+  `evals/suites/smoke-scored.jsonl`, `docs/data-policy.md`, `docs/data-pipeline.md`,
+  `docs/evaluation-plan.md`.
+- **Acceptance criteria:**
+  - [x] `scripts/data/build_benchmark_index.py` (stdlib): gathers every eval text
+        that must stay out of training (probe texts + scored-suite **prompts and
+        answers**) into a canonical `evals/benchmark-index.jsonl` (one `{text,...}`
+        per line), with a `--check` mode that verifies it is in sync with the suites.
+  - [x] `evals/benchmark-index.jsonl` committed (small eval reference, not training
+        data), kept in sync by a test (regenerate == committed).
+  - [x] A test proves end-to-end decontamination: a planted copy of a benchmark text
+        is **flagged/removed** by `contamination.py` against the index, while a clean
+        doc survives.
+  - [x] `python3 scripts/run_checks.py` exits 0 with a decontamination check wired in.
+  - [x] `data-pipeline.md` / `data-policy.md` / `evaluation-plan.md` document the
+        canonical benchmark index + the decontamination command.
+- **Forbidden zones:** committing training data; weakening the existing contamination
+  thresholds; any third-party dependency.
+- **Evidence:** the index + sync test + planted-contamination test; gate output; reviewer pass.
+- **Stop conditions:** pass per criteria; timeout as usual.
+- **Verification:** gate green (`all 12 checks passed`, incl. `benchmark_index`
+  asserting the committed index is in sync with the suites; 6 decontamination tests
+  incl. a planted-prompt removal and a short-token safety regression). Independent
+  code-reviewer (separate context, ran the gate + adversarial over-removal probes):
+  **APPROVE** — both required gates PASS (decontamination works end-to-end; in-sync
+  gate is real). Its two MEDIUM follow-ups were then fixed: a min-length floor on
+  answer rows (drops generic ≤4-char tokens; index 21 -> 16) and a `_rel` helper so
+  out-of-repo `--output` errors print cleanly, plus the recommended safety test.
+- **Lessons:**
+  - Decontamination is a hard pre-training prerequisite — a canonical, in-sync-gated
+    benchmark index (`evals/benchmark-index.jsonl`) makes "decontaminate vs the eval
+    set" runnable, reviewable, and drift-proof before M2 ever trains.
+  - For a contamination index, short/generic answer tokens ("7", "東京") are a
+    false-positive hazard: floor answer-row inclusion at the n-gram window so only
+    meaningful items are protected; prompts are always included.
+  - A step that *deletes* data needs an adversarial worst-case review (the reviewer's
+    short-answer over-removal analysis) and a regression test pinning the safety
+    property — done here before it can touch a real corpus.
+
+---
+
 ## L-006 — M2 implementation plan (owner decision artifact)
 
 - **Status:** passed

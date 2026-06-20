@@ -1,0 +1,16 @@
+{"id": "probes:configuration_001", "text": "{\"model\":\"falcie-smoke\",\"context_length\":4096,\"license\":\"Apache-2.0\",\"weights\":\"coming-soon\"}", "source": "probes/text"}
+{"id": "probes:en_prose_001", "text": "fal'Cie aims to become a frontier-grade open-weight language model that researchers and builders can run, inspect, fine-tune, and own.", "source": "probes/text"}
+{"id": "probes:ja_prose_001", "text": "fal'Cieは、誰もが自分の環境で実行し、検証し、改良できるオープンウェイト言語モデルを目指します。", "source": "probes/text"}
+{"id": "probes:markdown_001", "text": "## Release Gate\\n\\n- Evaluation report complete\\n- Model card complete\\n- Checksums published\\n", "source": "probes/text"}
+{"id": "probes:mixed_technical_001", "text": "評価 harness は README、model card、training config、data manifest を同じ commit SHA に紐づけます。", "source": "probes/text"}
+{"id": "probes:python_code_001", "text": "def load_manifest(path: Path) -> dict[str, Any]:\\n    return json.loads(path.read_text(encoding=\"utf-8\"))\\n", "source": "probes/text"}
+{"id": "probes:typescript_code_001", "text": "export function formatModelName(name: string): string {\\n  return name.trim().toLowerCase();\\n}\\n", "source": "probes/text"}
+{"id": "smoke-scored:code_add_def:answer", "text": "def add", "source": "smoke-scored/answer"}
+{"id": "smoke-scored:code_add_def:prompt", "text": "Write a Python function named add that takes a and b and returns their sum. Include the def line.", "source": "smoke-scored/prompt"}
+{"id": "smoke-scored:en_capital:answer", "text": "Paris", "source": "smoke-scored/answer"}
+{"id": "smoke-scored:en_capital:prompt", "text": "What is the capital of France? Answer with the city name only.", "source": "smoke-scored/prompt"}
+{"id": "smoke-scored:en_mult:prompt", "text": "What is 12 times 12?", "source": "smoke-scored/prompt"}
+{"id": "smoke-scored:en_prime_mc:prompt", "text": "Which of these is a prime number? A) 4 B) 6 C) 7 D) 8", "source": "smoke-scored/prompt"}
+{"id": "smoke-scored:instr_done:prompt", "text": "Reply with exactly the word DONE and nothing else.", "source": "smoke-scored/prompt"}
+{"id": "smoke-scored:ja_arith:prompt", "text": "3 たす 4 はいくつですか。数字で答えてください。", "source": "smoke-scored/prompt"}
+{"id": "smoke-scored:ja_capital:prompt", "text": "日本の首都はどこですか。地名だけ答えてください。", "source": "smoke-scored/prompt"}

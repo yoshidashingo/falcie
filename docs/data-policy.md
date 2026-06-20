@@ -82,6 +82,13 @@ The pipeline should include:
 
 Before release, public benchmark prompts and answers must be checked against the training corpus using exact and approximate matching.
 
+This is wired: `scripts/data/build_benchmark_index.py` assembles the canonical
+"do-not-train-on-these" set (`evals/benchmark-index.jsonl`) from every eval text —
+probe texts plus scored-suite prompts and answers — and `scripts/data/contamination.py`
+removes any training record that exactly matches or is a near-duplicate (char n-gram
+Jaccard) of a benchmark item. The index is regenerated as suites grow and a gate check
+fails if it drifts out of sync.
+
 Contamination reports should include:
 
 - Benchmark name

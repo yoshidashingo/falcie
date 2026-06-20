@@ -94,7 +94,10 @@ Each evaluated checkpoint should publish:
 ## Anti-Contamination Rules
 
 - Keep benchmark datasets out of training data unless explicitly allowed for supervised training and disclosed.
-- Run near-duplicate search against public benchmark prompts.
+- Run near-duplicate search against public benchmark prompts. Wired: the eval texts
+  are aggregated into `evals/benchmark-index.jsonl`
+  (`scripts/data/build_benchmark_index.py`) and the training corpus is decontaminated
+  against it with `scripts/data/contamination.py` (exact + char-n-gram Jaccard).
 - Track benchmark leakage findings in release notes.
 - Avoid tuning directly to leaderboard quirks.
 

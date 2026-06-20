@@ -45,8 +45,18 @@ python3 scripts/data/contamination.py filtered.jsonl --remove --output clean.jso
 python3 scripts/data/aggregate.py clean.jsonl --format md
 ```
 
-`contamination` defaults its benchmarks to `evals/tokenizer/probes.jsonl`; point
-`--benchmarks` at the real evaluation set before a training run.
+`contamination` defaults its benchmarks to `evals/tokenizer/probes.jsonl`. Before a
+training run, point `--benchmarks` at the **canonical eval-benchmark index** instead —
+`evals/benchmark-index.jsonl`, built by `scripts/data/build_benchmark_index.py` from
+every eval text that must stay out of training (probe texts + scored-suite prompts and
+answers). The index is kept in sync with the suites by a gate check
+(`build_benchmark_index.py --check`). Decontaminate with:
+
+```bash
+python3 scripts/data/build_benchmark_index.py            # refresh the index
+python3 scripts/data/contamination.py clean.jsonl \
+    --benchmarks evals/benchmark-index.jsonl --remove --output decontaminated.jsonl
+```
 
 ## Verification
 
