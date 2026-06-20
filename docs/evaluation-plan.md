@@ -120,3 +120,19 @@ Each evaluated checkpoint should publish:
 harness without a model. Suites under `evals/suites/` are harness fixtures, not
 benchmarks (no contamination risk). When a real model lands, plug its `predict`
 into the harness — the scoring, aggregation, and report shape are already in place.
+
+## Base-LM Evaluation — bits-per-byte (L-005)
+
+Base (pre-instruction) checkpoints are judged by **bits-per-byte (BPB)** and
+perplexity on held-out text — the answer-checking harness above is for instruction
+models. `scripts/evals/lm_eval.py` trains a model on a train split and reports BPB
+overall and per language on a disjoint held-out slice; a uniform model scores
+log2(256) = 8.0 bits/byte, the floor any learned model must beat.
+
+The first evaluable series member is a **dependency-free byte n-gram baseline**
+(`scripts/model/ngram_lm.py`) — a floor, not a capability claim. On the held-out
+public-domain corpus it reaches ~2.18 bits/byte at order 3 (perplexity ~4.5),
+closing the data -> tokenizer -> model -> eval loop end to end. See
+[`evals/lm-baseline-report.md`](evals/lm-baseline-report.md). A real model (M2+)
+plugs into the same BPB metric; the raw corpus and trained model are not committed
+(regenerable via `scripts/data/fetch_corpus.py` + `scripts/evals/lm_eval.py`).

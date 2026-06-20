@@ -9,6 +9,64 @@ entries short; link to PRs/commits/ADRs for detail.
 
 ---
 
+## L-005 — Baseline n-gram LM + bits-per-byte eval (first end-to-end evaluable member)
+
+- **Status:** passed
+- **Owner:** Shingo YOSHIDA
+- **Opened / Closed:** 2026-06-20 / 2026-06-20
+- **Goal:** Close the data -> tokenizer -> model -> eval loop for the first time
+  with a *trivial, honest* baseline: a dependency-free byte n-gram language model
+  and the base-LM metric every real base model is judged on — **bits-per-byte
+  (BPB)** and perplexity on held-out text. This gives the eval harness a real
+  (non-reference) model and gives the project its first evaluable series member.
+  Explicitly **not** a capability claim — an n-gram is a floor, not "high
+  performance"; the value is the metric + the closed loop.
+- **Inputs:** `docs/evaluation-plan.md`, `scripts/tokenizer/bpe.py`,
+  `scripts/data/fetch_corpus.py` (held-out corpus), `data-policy.md` (no raw data
+  / no large model committed).
+- **Acceptance criteria:**
+  - [x] `scripts/model/ngram_lm.py`: dependency-free byte n-gram LM with smoothing
+        that yields a **valid normalized distribution** (probabilities over the 256
+        bytes sum to 1, never zero) so BPB/perplexity are finite; deterministic.
+  - [x] `scripts/evals/lm_eval.py`: trains an n-gram on a train split, computes
+        **BPB + perplexity overall and per language** on a disjoint held-out slice,
+        emits a report; higher order must not increase training BPB (the model learns).
+  - [x] A committed BPB report under `docs/evals/` (the trained model + raw corpus
+        are **not** committed — regenerable via the scripts), like the L-003 pattern.
+  - [x] `python3 scripts/run_checks.py` exits 0 with a fast LM smoke wired in (runs
+        on a tiny committed fixture, not the big corpus).
+  - [x] Unit tests: valid distribution (sums to ~1), finite positive BPB,
+        order monotonicity on training text, determinism.
+  - [x] `docs/evaluation-plan.md` / `evals/README.md` note the base-LM (BPB) layer.
+- **Forbidden zones:** committing the raw corpus or a large trained model; claiming
+  the baseline is high-performance; any third-party dependency.
+- **Evidence:** the BPB report (finite numbers, order trend), gate output, reviewer pass.
+- **Stop conditions:** pass per criteria; handoff if it would need a neural framework
+  (it must not — n-gram is pure stdlib); timeout as usual.
+- **Verification:** gate green (`all 11 checks passed`, incl. `lm_eval_smoke`
+  asserting best BPB < 8.0; 17 LM unit tests). Held-out report reproduces
+  byte-for-byte (deterministic). Independent code-reviewer (separate context, ran
+  the gate + adversarial probes itself): first APPROVE-WITH-NITS, then **APPROVE**
+  after the fixes — confirmed the distribution sums to 1 within one float ULP, all
+  probabilities > 0, and BPB always finite. Result: held-out BPB 5.71 -> 2.18 across
+  orders 0..3 (best order 3 = 2.1766, perplexity ~4.5), vs uniform 8.0.
+- **Lessons:**
+  - Closing data -> tokenizer -> model -> eval end-to-end — even with a trivial
+    n-gram — is high-value: it validates the whole pipeline, gives the eval harness
+    a real (non-reference) model, and establishes the base-LM metric (BPB) a real
+    model will reuse. The n-gram is an honest floor, not a capability claim.
+  - The normalization invariant (probs sum to 1, all > 0) is what makes BPB finite —
+    make it **structural** (reject floor_weight <= 0 at construction), not a
+    convention a future caller could break.
+  - When holding out for eval, dedup held vs train by exact text (short boilerplate
+    evades corpus dedup) — and capture the train set *before* dropping held rows, or
+    the fix itself becomes a leak.
+  - Next is the owner's call: M2 (a neural model + a training framework + compute) is
+    the big step that leaves the dependency-free phase. The base-LM metric and
+    harness are ready for whatever model lands.
+
+---
+
 ## L-004 — Scored evaluation harness ("evaluable" core)
 
 - **Status:** passed

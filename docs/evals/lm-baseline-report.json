@@ -1,0 +1,54 @@
+{
+  "harness_version": "lm-1.0",
+  "metric": "bits_per_byte",
+  "corpus": "data/bakeoff/corpus.jsonl",
+  "mode": "held-out",
+  "commit_sha": "88fad205ff5da33707d3f822026f263094797819",
+  "model": "ngram-baseline (byte-level, interpolated)",
+  "uniform_baseline_bpb": 8.0,
+  "train_bytes": 564782,
+  "heldout_bytes": 118495,
+  "results": [
+    {
+      "order": 0,
+      "bits_per_byte": 5.7128,
+      "by_language": {
+        "code": 5.9168,
+        "en": 5.3838,
+        "ja": 5.8729
+      }
+    },
+    {
+      "order": 1,
+      "bits_per_byte": 3.4671,
+      "by_language": {
+        "code": 4.2735,
+        "en": 3.7165,
+        "ja": 3.2287
+      }
+    },
+    {
+      "order": 2,
+      "bits_per_byte": 2.6374,
+      "by_language": {
+        "code": 3.0889,
+        "en": 2.9096,
+        "ja": 2.4293
+      }
+    },
+    {
+      "order": 3,
+      "bits_per_byte": 2.1766,
+      "by_language": {
+        "code": 2.3198,
+        "en": 2.3377,
+        "ja": 2.0685
+      }
+    }
+  ],
+  "best": {
+    "order": 3,
+    "bits_per_byte": 2.1766,
+    "perplexity": 4.52
+  }
+}

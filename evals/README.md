@@ -62,6 +62,23 @@ its `predict(task) -> str` in place of a reference predictor; nothing else chang
 `evals/results/` outputs are not committed (see `.gitignore`); the report is
 regenerated from the pinned suite + the model under test.
 
+## Base-LM Evaluation (bits-per-byte)
+
+For *base* (pre-instruction) checkpoints the relevant metric is bits-per-byte (BPB)
+/ perplexity on held-out text, not answer accuracy. `scripts/evals/lm_eval.py`
+trains a model on a train split and reports BPB overall + per language on a disjoint
+held-out slice (uniform floor = 8.0 bits/byte).
+
+```bash
+python3 scripts/evals/lm_eval.py --corpus data/bakeoff/corpus.jsonl --orders 0 1 2 3 \
+    --output docs/evals/lm-baseline-report.json
+```
+
+The first member is a dependency-free byte n-gram baseline
+(`scripts/model/ngram_lm.py`) — a floor, not a capability claim — which reaches
+~2.18 bits/byte on the held-out public-domain corpus. The committed report lives in
+`docs/evals/`; the corpus and trained model are not committed (regenerable).
+
 ## Release Gate
 
 No model checkpoint should be released until:
