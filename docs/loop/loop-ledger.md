@@ -9,6 +9,57 @@ entries short; link to PRs/commits/ADRs for detail.
 
 ---
 
+## L-009 — Unified evaluation runner (eval capstone)
+
+- **Status:** passed
+- **Owner:** Shingo YOSHIDA
+- **Opened / Closed:** 2026-06-21 / 2026-06-21
+- **Goal:** Consolidate the three eval dimensions — scored QA (L-004), base-LM BPB
+  (L-005), long-context NIAH (L-008) — into ONE runner that evaluates a model and
+  emits a single model-card-ready report (`evaluation-plan.md` Reporting Format).
+  This is the dependency-free part of roadmap M2's "evaluation runs automatically";
+  a real model (M2+) plugs in once and gets all three dimensions in one report.
+- **Inputs:** `scripts/evals/harness.py`, `scripts/evals/lm_eval.py`,
+  `scripts/evals/niah.py`, `scripts/model/ngram_lm.py`, `docs/evaluation-plan.md`
+  (Reporting Format), `docs/model-card-template.md`.
+- **Acceptance criteria:**
+  - [x] `scripts/evals/evaluate.py` (stdlib): runs all three dimensions over a model
+        (a text predictor + a base-LM) and emits a consolidated JSON + a
+        model-card-ready markdown (model id, status, harness versions, a cross-
+        dimension score table, known failures).
+  - [x] Reference models validate it without a real model: a **gold** reference
+        scores QA=1.0, NIAH=1.0, BPB<8; an **empty** reference scores QA=0.0,
+        NIAH=0.0 — proving the runner orchestrates each dimension correctly.
+  - [x] `python3 scripts/run_checks.py` exits 0 with a unified-eval smoke wired in.
+  - [x] Unit tests: the runner aggregates each dimension correctly; gold/empty
+        reference invariants hold; the consolidated report has the required fields.
+  - [x] `evals/README.md` / `docs/evaluation-plan.md` document the unified runner.
+- **Forbidden zones:** committing corpora/models; claiming model capability; deps.
+- **Evidence:** the consolidated report (gold reference); gate; reviewer pass.
+- **Stop conditions:** pass per criteria; timeout as usual.
+- **Verification:** gate green (`all 14 checks passed`, incl. `unified_eval_smoke`
+  asserting the gold reference invariants; 7 unified-runner tests). Machine
+  cross-check confirmed the runner's three dimension scores equal the underlying
+  per-module runs exactly (no drift). Independent code-reviewer (separate context,
+  ran the gate + injected regressions) = **APPROVE-WITH-NITS**: both required gates
+  PASS (correct composition, no misleading cross-metric aggregation; honest
+  reference-only framing). Its MEDIUM (echo silently exempt from `--assert-reference`;
+  cosmetic commit_sha) + LOWs (orders/floor/version/doc) were then fixed with a
+  regression test.
+- **Lessons:**
+  - A runner over incompatible metrics (accuracy / bits-per-byte / retrieval) must
+    NOT invent a single averaged "overall score" — keep dimensions separate; that
+    honesty is the whole point of a multi-axis report.
+  - A CI assertion flag (`--assert-reference`) must **refuse** predictors with no
+    defined invariant, or it can be wired as a no-op green (the echo footgun).
+  - Composition adds no value if it drifts: cross-check the unified scores against
+    the standalone modules (they matched to the digit).
+  - **Process under outage:** the independent review was deferred ~15min when the
+    reviewer subagent hit repeated 529 Overloaded; the commit was **held** until the
+    independent pass completed rather than self-approving through the outage.
+
+---
+
 ## L-008 — Needle-in-a-haystack long-context eval
 
 - **Status:** passed

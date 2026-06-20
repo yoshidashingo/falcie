@@ -150,3 +150,22 @@ Reference predictors validate the eval without a model: `gold` retrieves every
 needle (1.0), `empty` none (0.0), and a `window:<N>` prefix stand-in shows real
 length x depth structure (short/shallow found, long/deep missed). A real model (M2+)
 plugs in as the predictor when context extension is tested.
+
+## Unified Evaluation Runner (L-009)
+
+`scripts/evals/evaluate.py` runs all three dimensions over a single model — a text
+**predictor** (scored QA + NIAH) and a base **LM** (bits-per-byte) — and emits one
+consolidated report in this Reporting Format (model id, status, harness versions,
+a cross-dimension **score table**, known failures) plus a model-card-ready markdown.
+This is the dependency-free part of M2's "evaluation runs automatically": a real
+model plugs in once and is scored across QA, base-LM, and long-context together.
+
+```bash
+python3 scripts/evals/evaluate.py --model gold --lm-smoke --format md
+```
+
+Reference models (`gold`/`empty`) validate the runner without a trained model:
+`gold` -> QA 1.0, NIAH 1.0, BPB &lt; 8; `empty` -> QA 0.0, NIAH 0.0 (asserted in the gate).
+The model/history-specific Reporting Format fields (training token count, context
+length, benchmark versions, comparison vs the prior checkpoint) are populated once a
+real model and a prior checkpoint exist; a reference run legitimately omits them.

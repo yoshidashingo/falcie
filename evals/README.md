@@ -93,6 +93,20 @@ python3 scripts/evals/niah.py --predictor window --window 1500 --format md  # st
 Reference predictors (`gold`/`empty`/`window:<N>`) validate the eval without a model;
 a real model plugs in as the predictor when context extension is tested.
 
+## Unified Evaluation Runner
+
+`scripts/evals/evaluate.py` runs all three dimensions (scored QA + base-LM BPB +
+long-context NIAH) over one model and emits a single consolidated report + a
+model-card-ready markdown with a cross-dimension score table.
+
+```bash
+python3 scripts/evals/evaluate.py --model gold --lm-smoke --format md
+python3 scripts/evals/evaluate.py --model gold --lm-smoke --output evals/results/eval.json
+```
+
+A real model (M2+) plugs in once as the text predictor + base-LM and is scored across
+every dimension together — the dependency-free part of "evaluation runs automatically".
+
 ## Release Gate
 
 No model checkpoint should be released until:

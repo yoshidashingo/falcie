@@ -34,6 +34,7 @@ sys.path.insert(0, str(_HERE))
 
 import metrics as M  # noqa: E402
 
+HARNESS_VERSION = "1.0"
 DEFAULT_LENGTHS = [200, 1000, 4000]
 DEFAULT_DEPTHS = [0.0, 0.25, 0.5, 0.75, 1.0]
 
