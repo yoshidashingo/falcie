@@ -1,0 +1,329 @@
+{
+  "commit_sha": "26e4f526c96bd3bba15865e2d2687866b11b71db",
+  "corpus": "data/bakeoff/corpus.jsonl",
+  "corpus_manifest": "configs/data/bakeoff-corpus.manifest.json",
+  "d_model": 2048,
+  "eval_frac": 0.12,
+  "train": {
+    "records": 2610,
+    "by_language_bytes": {
+      "code": 75735,
+      "en": 259583,
+      "ja": 229464
+    }
+  },
+  "eval": {
+    "records": 359,
+    "by_language_bytes": {
+      "code": 8634,
+      "en": 39696,
+      "ja": 70368
+    }
+  },
+  "baselines": {
+    "byte": {
+      "code": {
+        "tokens": 8634,
+        "chars": 8634,
+        "bytes": 8634,
+        "tokens_per_char": 1.0,
+        "tokens_per_byte": 1.0
+      },
+      "en": {
+        "tokens": 39696,
+        "chars": 38719,
+        "bytes": 39696,
+        "tokens_per_char": 1.0252,
+        "tokens_per_byte": 1.0
+      },
+      "ja": {
+        "tokens": 70368,
+        "chars": 23456,
+        "bytes": 70368,
+        "tokens_per_char": 3.0,
+        "tokens_per_byte": 1.0
+      }
+    },
+    "char": {
+      "code": {
+        "tokens": 8634,
+        "chars": 8634,
+        "bytes": 8634,
+        "tokens_per_char": 1.0,
+        "tokens_per_byte": 1.0
+      },
+      "en": {
+        "tokens": 38719,
+        "chars": 38719,
+        "bytes": 39696,
+        "tokens_per_char": 1.0,
+        "tokens_per_byte": 0.9754
+      },
+      "ja": {
+        "tokens": 23456,
+        "chars": 23456,
+        "bytes": 70368,
+        "tokens_per_char": 1.0,
+        "tokens_per_byte": 0.3333
+      }
+    }
+  },
+  "candidates": [
+    {
+      "name": "bpe-512",
+      "requested_vocab_size": 512,
+      "effective_vocab_size": 512,
+      "learned_merges": 248,
+      "collapsed": false,
+      "overall": {
+        "tokens": 58213,
+        "chars": 70809,
+        "bytes": 118698,
+        "tokens_per_char": 0.8221,
+        "tokens_per_byte": 0.4904
+      },
+      "by_language": {
+        "code": {
+          "tokens": 5190,
+          "chars": 8634,
+          "bytes": 8634,
+          "tokens_per_char": 0.6011,
+          "tokens_per_byte": 0.6011
+        },
+        "en": {
+          "tokens": 21097,
+          "chars": 38719,
+          "bytes": 39696,
+          "tokens_per_char": 0.5449,
+          "tokens_per_byte": 0.5315
+        },
+        "ja": {
+          "tokens": 31926,
+          "chars": 23456,
+          "bytes": 70368,
+          "tokens_per_char": 1.3611,
+          "tokens_per_byte": 0.4537
+        }
+      },
+      "japanese_gate": {
+        "byte_ja_tokens_per_char": 3.0,
+        "candidate_ja_tokens_per_char": 1.3611,
+        "beats_byte_baseline": true,
+        "improvement_pct": 54.6
+      },
+      "embedding_cost": {
+        "d_model": 2048,
+        "embed_params": 1048576,
+        "embed_params_millions": 1.05,
+        "note": "single embedding matrix (vocab x d_model); tied input/output embeddings assume the same matrix is reused for the LM head."
+      }
+    },
+    {
+      "name": "bpe-1024",
+      "requested_vocab_size": 1024,
+      "effective_vocab_size": 1024,
+      "learned_merges": 760,
+      "collapsed": false,
+      "overall": {
+        "tokens": 45209,
+        "chars": 70809,
+        "bytes": 118698,
+        "tokens_per_char": 0.6385,
+        "tokens_per_byte": 0.3809
+      },
+      "by_language": {
+        "code": {
+          "tokens": 3910,
+          "chars": 8634,
+          "bytes": 8634,
+          "tokens_per_char": 0.4529,
+          "tokens_per_byte": 0.4529
+        },
+        "en": {
+          "tokens": 16440,
+          "chars": 38719,
+          "bytes": 39696,
+          "tokens_per_char": 0.4246,
+          "tokens_per_byte": 0.4141
+        },
+        "ja": {
+          "tokens": 24859,
+          "chars": 23456,
+          "bytes": 70368,
+          "tokens_per_char": 1.0598,
+          "tokens_per_byte": 0.3533
+        }
+      },
+      "japanese_gate": {
+        "byte_ja_tokens_per_char": 3.0,
+        "candidate_ja_tokens_per_char": 1.0598,
+        "beats_byte_baseline": true,
+        "improvement_pct": 64.7
+      },
+      "embedding_cost": {
+        "d_model": 2048,
+        "embed_params": 2097152,
+        "embed_params_millions": 2.1,
+        "note": "single embedding matrix (vocab x d_model); tied input/output embeddings assume the same matrix is reused for the LM head."
+      }
+    },
+    {
+      "name": "bpe-2048",
+      "requested_vocab_size": 2048,
+      "effective_vocab_size": 2048,
+      "learned_merges": 1784,
+      "collapsed": false,
+      "overall": {
+        "tokens": 36631,
+        "chars": 70809,
+        "bytes": 118698,
+        "tokens_per_char": 0.5173,
+        "tokens_per_byte": 0.3086
+      },
+      "by_language": {
+        "code": {
+          "tokens": 3030,
+          "chars": 8634,
+          "bytes": 8634,
+          "tokens_per_char": 0.3509,
+          "tokens_per_byte": 0.3509
+        },
+        "en": {
+          "tokens": 13304,
+          "chars": 38719,
+          "bytes": 39696,
+          "tokens_per_char": 0.3436,
+          "tokens_per_byte": 0.3351
+        },
+        "ja": {
+          "tokens": 20297,
+          "chars": 23456,
+          "bytes": 70368,
+          "tokens_per_char": 0.8653,
+          "tokens_per_byte": 0.2884
+        }
+      },
+      "japanese_gate": {
+        "byte_ja_tokens_per_char": 3.0,
+        "candidate_ja_tokens_per_char": 0.8653,
+        "beats_byte_baseline": true,
+        "improvement_pct": 71.2
+      },
+      "embedding_cost": {
+        "d_model": 2048,
+        "embed_params": 4194304,
+        "embed_params_millions": 4.19,
+        "note": "single embedding matrix (vocab x d_model); tied input/output embeddings assume the same matrix is reused for the LM head."
+      }
+    },
+    {
+      "name": "bpe-4096",
+      "requested_vocab_size": 4096,
+      "effective_vocab_size": 4096,
+      "learned_merges": 3832,
+      "collapsed": false,
+      "overall": {
+        "tokens": 30285,
+        "chars": 70809,
+        "bytes": 118698,
+        "tokens_per_char": 0.4277,
+        "tokens_per_byte": 0.2551
+      },
+      "by_language": {
+        "code": {
+          "tokens": 2397,
+          "chars": 8634,
+          "bytes": 8634,
+          "tokens_per_char": 0.2776,
+          "tokens_per_byte": 0.2776
+        },
+        "en": {
+          "tokens": 11081,
+          "chars": 38719,
+          "bytes": 39696,
+          "tokens_per_char": 0.2862,
+          "tokens_per_byte": 0.2791
+        },
+        "ja": {
+          "tokens": 16807,
+          "chars": 23456,
+          "bytes": 70368,
+          "tokens_per_char": 0.7165,
+          "tokens_per_byte": 0.2388
+        }
+      },
+      "japanese_gate": {
+        "byte_ja_tokens_per_char": 3.0,
+        "candidate_ja_tokens_per_char": 0.7165,
+        "beats_byte_baseline": true,
+        "improvement_pct": 76.1
+      },
+      "embedding_cost": {
+        "d_model": 2048,
+        "embed_params": 8388608,
+        "embed_params_millions": 8.39,
+        "note": "single embedding matrix (vocab x d_model); tied input/output embeddings assume the same matrix is reused for the LM head."
+      }
+    },
+    {
+      "name": "bpe-8192",
+      "requested_vocab_size": 8192,
+      "effective_vocab_size": 8192,
+      "learned_merges": 7928,
+      "collapsed": false,
+      "overall": {
+        "tokens": 25806,
+        "chars": 70809,
+        "bytes": 118698,
+        "tokens_per_char": 0.3644,
+        "tokens_per_byte": 0.2174
+      },
+      "by_language": {
+        "code": {
+          "tokens": 1954,
+          "chars": 8634,
+          "bytes": 8634,
+          "tokens_per_char": 0.2263,
+          "tokens_per_byte": 0.2263
+        },
+        "en": {
+          "tokens": 9422,
+          "chars": 38719,
+          "bytes": 39696,
+          "tokens_per_char": 0.2433,
+          "tokens_per_byte": 0.2374
+        },
+        "ja": {
+          "tokens": 14430,
+          "chars": 23456,
+          "bytes": 70368,
+          "tokens_per_char": 0.6152,
+          "tokens_per_byte": 0.2051
+        }
+      },
+      "japanese_gate": {
+        "byte_ja_tokens_per_char": 3.0,
+        "candidate_ja_tokens_per_char": 0.6152,
+        "beats_byte_baseline": true,
+        "improvement_pct": 79.5
+      },
+      "embedding_cost": {
+        "d_model": 2048,
+        "embed_params": 16777216,
+        "embed_params_millions": 16.78,
+        "note": "single embedding matrix (vocab x d_model); tied input/output embeddings assume the same matrix is reused for the LM head."
+      }
+    }
+  ],
+  "recommendation": {
+    "name": "bpe-8192",
+    "basis": "best fertility (no knee in range)",
+    "cost_knee_reached": false,
+    "japanese_tokens_per_char": 0.6152,
+    "improvement_vs_byte_pct": 79.5,
+    "effective_vocab_size": 8192,
+    "embedding_params_millions": 16.78,
+    "reason": "No cost knee within the tested range — each doubling still cut Japanese tokens/char by >= 14%, so the largest tested vocab (bpe-8192) is best here. The knee is expected at larger vocab; the production size is fixed by the full 64k/128k/256k run at M2."
+  },
+  "scope_note": "In-phase proxy for the full 64k/128k/256k bakeoff. The pure-Python BPE trainer is O(merges x corpus) and no large corpus may be committed (data-policy.md), so the full sweep is deferred to M2 (real corpus + a faster, dependency-managed trainer). What generalizes here is the trend and the methodology, not the absolute vocab size."
+}

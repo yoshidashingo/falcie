@@ -171,5 +171,13 @@ A tokenizer can be selected for M2 experiments only when:
 3. Add tokenizer training configs under `configs/tokenizer/`.
 4. ~~Add automated tokenizer scoring once a tokenizer library is selected.~~ Done:
    dependency-free byte-level BPE library + scorer + selection harness.
-5. Next: acquire a held-out training corpus and re-run selection on it; finalize
-   the special-token scheme (unit U-T4) and vocabulary size.
+5. ~~Next: acquire a held-out training corpus and re-run selection on it~~ Done
+   (L-003): `scripts/data/fetch_corpus.py` builds a held-out public-domain corpus
+   (Aozora JP + Gutenberg EN + CPython code; raw corpus not committed per
+   `data-policy.md`), and `scripts/tokenizer/vocab_bakeoff.py` measures Japanese
+   fertility vs embedding cost across vocab sizes — see
+   [`tokenizers/vocab-bakeoff-report.md`](tokenizers/vocab-bakeoff-report.md).
+6. Next: finalize the special-token scheme (unit U-T4) and the vocabulary size. The
+   in-phase bakeoff shows the fertility/cost trend at small scale; the full
+   64k/128k/256k decision is deferred to M2 (real corpus + a faster, dependency-
+   managed trainer).

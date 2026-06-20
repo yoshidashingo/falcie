@@ -1,0 +1,151 @@
+{
+  "name": "tokenizer-bakeoff-corpus",
+  "version": "2026-06-20",
+  "use": "tokenizer-training (evaluation; not model pretraining)",
+  "note": "Held-out corpus for the L-003 vocab bakeoff. Per data-policy.md the raw corpus is NOT committed; regenerate with scripts/data/fetch_corpus.py.",
+  "retrieval_script": "scripts/data/fetch_corpus.py",
+  "filters": [
+    "aozora_markup_strip",
+    "gutenberg_wrapper_strip",
+    "paragraph_split",
+    "per_language_byte_cap"
+  ],
+  "totals": {
+    "records": 2969,
+    "bytes": 683480,
+    "by_language": {
+      "ja": 299832,
+      "en": 299279,
+      "code": 84369
+    },
+    "corpus_sha256": "f645889f8f6465b19ceef2cb07c9e45c0a59edbc14bae036000c95fd2da9074e"
+  },
+  "sources": [
+    {
+      "id": "akutagawa_rashomon",
+      "title": "羅生門 / 芥川龍之介",
+      "source": "https://www.aozora.gr.jp/cards/000879/card127.html",
+      "snapshot": "2026-06-20",
+      "license": "public-domain",
+      "language": "ja",
+      "domain": "literature",
+      "status": "ok",
+      "cap_reached": false,
+      "sha256_full_clean": "3d7a7c5adb45884181760f659f98ff469921e680b33d149f0005b9c3c15a957f",
+      "paragraphs_used": 37,
+      "bytes_used": 17018
+    },
+    {
+      "id": "akutagawa_kumo",
+      "title": "蜘蛛の糸 / 芥川龍之介",
+      "source": "https://www.aozora.gr.jp/cards/000879/card92.html",
+      "snapshot": "2026-06-20",
+      "license": "public-domain",
+      "language": "ja",
+      "domain": "literature",
+      "status": "ok",
+      "cap_reached": false,
+      "sha256_full_clean": "53afd2a744401815e9f50b593819ac6ab0acb624084b9562a17afcffad09f787",
+      "paragraphs_used": 15,
+      "bytes_used": 8595
+    },
+    {
+      "id": "natsume_kokoro",
+      "title": "こころ / 夏目漱石",
+      "source": "https://www.aozora.gr.jp/cards/000148/card773.html",
+      "snapshot": "2026-06-20",
+      "license": "public-domain",
+      "language": "ja",
+      "domain": "literature",
+      "status": "ok",
+      "cap_reached": true,
+      "sha256_full_clean": "56b78f5d8b47df4bf838113b573a4f27b76a4198b02f0f201a0cd1f874254337",
+      "paragraphs_used": 951,
+      "bytes_used": 273922
+    },
+    {
+      "id": "natsume_botchan",
+      "title": "坊っちゃん / 夏目漱石",
+      "source": "https://www.aozora.gr.jp/cards/000148/card752.html",
+      "snapshot": "2026-06-20",
+      "license": "public-domain",
+      "language": "ja",
+      "domain": "literature",
+      "status": "ok_truncated_by_cap",
+      "cap_reached": true,
+      "sha256_full_clean": "25e1a3c7700ae31aaf6b3de4bbb9247a032f170c073f90e8a1308acd09972a7f",
+      "paragraphs_used": 0,
+      "bytes_used": 0
+    },
+    {
+      "id": "dazai_hashire",
+      "title": "走れメロス / 太宰治",
+      "source": "https://www.aozora.gr.jp/cards/000035/card1567.html",
+      "snapshot": "2026-06-20",
+      "license": "public-domain",
+      "language": "ja",
+      "domain": "literature",
+      "status": "ok_truncated_by_cap",
+      "cap_reached": true,
+      "sha256_full_clean": "2fcc87dcc2581b0182c97f82f01e0e9040c14f35a684682fd24de96a77227895",
+      "paragraphs_used": 0,
+      "bytes_used": 0
+    },
+    {
+      "id": "miyazawa_chumon",
+      "title": "注文の多い料理店 / 宮沢賢治",
+      "source": "https://www.aozora.gr.jp/cards/000081/card43754.html",
+      "snapshot": "2026-06-20",
+      "license": "public-domain",
+      "language": "ja",
+      "domain": "literature",
+      "status": "ok",
+      "cap_reached": true,
+      "sha256_full_clean": "3eedb4a1d89376b26f4f7abbf89c11343ff431de22700e16e4159cbc4b9b157e",
+      "paragraphs_used": 1,
+      "bytes_used": 297
+    },
+    {
+      "id": "gutenberg_alice",
+      "title": "Alice's Adventures in Wonderland / Lewis Carroll",
+      "source": "https://www.gutenberg.org/files/11/11-0.txt",
+      "snapshot": "2026-06-20",
+      "license": "public-domain",
+      "language": "en",
+      "domain": "literature",
+      "status": "ok",
+      "cap_reached": false,
+      "sha256_full_clean": "4e04ea77acf3b0215cae2089c977bc07526fc834597a1d463598d895354ba41d",
+      "paragraphs_used": 815,
+      "bytes_used": 148792
+    },
+    {
+      "id": "gutenberg_pride",
+      "title": "Pride and Prejudice / Jane Austen",
+      "source": "https://www.gutenberg.org/cache/epub/1342/pg1342.txt",
+      "snapshot": "2026-06-20",
+      "license": "public-domain",
+      "language": "en",
+      "domain": "literature",
+      "status": "ok",
+      "cap_reached": true,
+      "sha256_full_clean": "2387304e3cec1adb94b811218a27c6cd503cf7eba8c29c5d18f1bf862c67442f",
+      "paragraphs_used": 696,
+      "bytes_used": 150487
+    },
+    {
+      "id": "cpython_argparse",
+      "title": "CPython Lib/argparse.py (PSF)",
+      "source": "https://raw.githubusercontent.com/python/cpython/main/Lib/argparse.py",
+      "snapshot": "2026-06-20",
+      "license": "permissive (PSF)",
+      "language": "code",
+      "domain": "code",
+      "status": "ok",
+      "cap_reached": false,
+      "sha256_full_clean": "831c111d7191568b690a27bdfc037620d7ac835b14296c315a0f3342fc984073",
+      "paragraphs_used": 454,
+      "bytes_used": 84369
+    }
+  ]
+}

@@ -9,6 +9,74 @@ entries short; link to PRs/commits/ADRs for detail.
 
 ---
 
+## L-003 — Tokenizer vocab-size bakeoff (JP fertility evidence for ADR-003)
+
+- **Status:** passed
+- **Owner:** Shingo YOSHIDA
+- **Opened / Closed:** 2026-06-20 / 2026-06-20
+- **Goal:** Give ADR-003 real evidence on vocabulary size by measuring Japanese
+  fertility vs embedding-parameter cost across vocab sizes on a held-out
+  public-domain corpus — the measurement the L-002 research said was the open
+  tokenizer decision.
+- **Scope reality (logged, not silent):** a literal 64k/128k/256k *real-merge*
+  bakeoff is **not feasible in this dependency-free phase** — (a) no large corpus
+  may be committed (`data-policy.md`: store retrieval scripts, not raw data), and
+  (b) the pure-Python BPE trainer is O(merges x corpus), so 256k merges over MBs
+  is intractable here. The full sweep is **deferred to M2** (real corpus + a
+  faster, dependency-managed trainer). This loop builds the harness + metrics and
+  runs a real, non-collapsing *small-scale* fertility curve as the in-phase proxy.
+- **Inputs:** `docs/research/open-weight-recipes.md` (Tokenizer), ADR-003,
+  `scripts/tokenizer/*`, `docs/tokenizers/baseline-reference.md` (byte JP baseline
+  = 2.7255 tokens/char), `data-policy.md`.
+- **Acceptance criteria:**
+  - [x] `scripts/data/fetch_corpus.py` (stdlib-only) fetches public-domain text
+        (Aozora JP + Gutenberg EN [+ permissive code]), cleans it, writes a
+        held-out corpus to an **uncommitted** local path, and prints sizes + sha256.
+  - [x] A provenance manifest (per `data-policy.md` schema) is committed; the raw
+        corpus is **not** committed (gitignored).
+  - [x] The selection harness reports, per candidate, **Japanese tokens/char +
+        whether it beats the byte JP baseline (2.7255)** and **embedding cost
+        (vocab x d_model)**.
+  - [x] A real, non-collapsing bakeoff (>=3 vocab sizes) runs on the held-out
+        corpus; report committed under `docs/tokenizers/`.
+  - [x] Evidence shows BPE beats the byte JP baseline materially; the full
+        64k/128k/256k run is documented as deferred to M2.
+  - [x] `python3 scripts/run_checks.py` exits 0 (new metric has a unit test; gate
+        stays fast on the tiny probe corpus).
+- **Forbidden zones:** committing the raw corpus; changing the byte/char/whitespace
+  baselines; claiming the full 64k+ run was performed.
+- **Evidence:** the committed bakeoff report; gate output; independent reviewer pass.
+- **Stop conditions:** pass per criteria above; **handoff** if network is
+  unavailable (fall back / escalate); **timeout** — if a vocab size does not finish
+  in a few minutes, cap it and log the cap (no silent truncation).
+- **Verification:** gate green (`all 8 checks passed`, 230 unit tests); the held-out
+  bakeoff ran on a real public-domain corpus (raw corpus gitignored; only script +
+  manifest-with-hashes + report committed). Independent code-reviewer (separate
+  context, web/exec-enabled): first APPROVE-WITH-NITS (4 MEDIUM), then **APPROVE**
+  after the fixes — every ADR-003 number machine-cross-checked equal to the report
+  JSON. Measured: Japanese tokens/char 1.36 @512 -> 0.62 @8192 (54.6% -> 79.5%
+  better than the byte baseline), all non-collapsing.
+- **Lessons:**
+  - A second adversarial review after the first APPROVE-WITH-NITS still found 4
+    MEDIUM issues — for *measurement* code the methodology critique (single-work
+    eval, paragraph granularity, recommendation-vs-prose) matters as much as
+    claim-checking. Re-review after non-trivial edits, don't assume the first pass
+    caught everything.
+  - Honest "no knee in this range" beats a rigged recommendation: when fertility is
+    monotonic over the tested sizes, say the cost knee is *expected at larger scale*
+    rather than implying one the small-scale data doesn't show. `choose()` encodes
+    this (cost-knee detection), and the prose was corrected to match.
+  - `data-policy.md`'s "no raw data committed" pattern worked cleanly: gitignore the
+    corpus, commit the retrieval script + manifest (with sha256) + the report. The
+    fetch was deterministic (byte-identical corpus across re-runs), so a flag-only
+    code fix didn't invalidate the committed report.
+  - Pure-Python BPE is O(merges x corpus): the in-phase bakeoff caps at small vocab
+    (~8k in ~2min). Next: owner to promote ADR-003 Proposed -> Testing; the full
+    64k/128k/256k run waits for M2 (real corpus + a faster, dependency-managed
+    trainer).
+
+---
+
 ## L-002 — Open-weight recipe research log (fill ADR evidence)
 
 - **Status:** passed

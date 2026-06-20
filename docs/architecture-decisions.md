@@ -115,6 +115,37 @@ Recommendation: run a vocab-size bakeoff at 64k / 128k / 256k measuring Japanese
 fertility vs embedding-parameter cost on a JP-heavy held-out corpus before fixing
 the size.
 
+Bakeoff evidence (L-003, 2026-06-20): the harness now exists
+(`scripts/tokenizer/vocab_bakeoff.py`) and an in-phase small-scale bakeoff was run
+on a held-out public-domain corpus (Aozora JP + Gutenberg EN + CPython code; raw
+corpus not committed per `data-policy.md` — see
+`configs/data/bakeoff-corpus.manifest.json`). Report:
+`docs/tokenizers/vocab-bakeoff-report.md`. Japanese tokens/char measured on a
+held-out, multi-work eval slice vs that slice's own byte baseline (3.0), all
+non-collapsing:
+
+| vocab | ja tokens/char | vs byte | embed @ d_model=2048 |
+| ---: | ---: | ---: | ---: |
+| 512 | 1.3611 | -54.6% | 1.05M |
+| 1024 | 1.0598 | -64.7% | 2.10M |
+| 2048 | 0.8653 | -71.2% | 4.19M |
+| 4096 | 0.7165 | -76.1% | 8.39M |
+| 8192 | 0.6152 | -79.5% | 16.78M |
+
+Finding: even a tiny subword vocab crushes the byte baseline on Japanese (already
+-55% at 512). The fertility gain shows **diminishing returns** (per-doubling
+relative improvement 22% -> 18% -> 17% -> 14%) while embedding cost **doubles every
+step**. Within this small range no cost knee is reached — each doubling still cut
+Japanese tokens/char by >= 14%, so the best-fertility pick is simply the largest
+tested vocab; the knee is *expected* at larger vocab, which is exactly why the
+reference models settle at 128k-256k rather than scaling indefinitely, and why the
+JP/CJK benefit (Gemma 3) justifies the larger end. Absolute sizes here are tiny
+(pure-Python + a ~0.7 MB corpus); only the trend and methodology generalize. The
+full 64k/128k/256k run — where the production size and its actual knee are fixed —
+is deferred to M2 (real corpus + a faster, dependency-managed trainer).
+Recommendation: this justifies promoting ADR-003 from Proposed to **Testing** (owner
+handoff), carrying the byte-level BPE base and the fertility-vs-cost gate forward.
+
 ## ADR-004: Context Length Strategy
 
 Status: Proposed
