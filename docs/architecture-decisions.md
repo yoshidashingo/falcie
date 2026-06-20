@@ -39,6 +39,14 @@ Current direction:
 
 Start with a simple PyTorch/Hugging Face-compatible path for smoke tests, then revisit for larger-scale training.
 
+Research evidence (L-002, 2026-06-20): reference recipes use custom PyTorch (Llama 3
+— 4D parallelism TP+CP+PP+FSDP) or JAX/Pathways (Gemma). The most reproducible
+*open* training stack is AI2's `OLMo-core` (PyTorch, Apache-2.0), which ships data,
+code, logs, and intermediate checkpoints. This supports a PyTorch-first direction
+with OLMo-core as the primary reference to study. See
+`docs/research/open-weight-recipes.md` (Training recipe & stability). Recommendation:
+keep Status Proposed; move to Testing once the M2 training framework is chosen.
+
 ## ADR-002: Model Family
 
 Status: Proposed
@@ -60,6 +68,15 @@ Decision criteria:
 Current direction:
 
 Begin with dense decoder-only experimental models to reduce pipeline complexity. Revisit MoE when data, evaluation, and training infrastructure are stable.
+
+Research evidence (L-002, 2026-06-20): the dense-first choice is well supported —
+Meta chose dense for Llama 3 explicitly "to maximize training stability," and OLMo 2
+and Gemma 2/3 are dense. MoE is the frontier-efficiency path: DeepSeek-V3 activates
+37B of 671B params (MLA + DeepSeekMoE + auxiliary-loss-free balancing) and Qwen3-MoE
+uses 128 experts / 8 active. JP caveat: Qwen3 dropped shared experts to push
+specialization; a JP+EN model should keep >=1 shared expert if it adopts MoE. See
+`docs/research/open-weight-recipes.md` (Model family). Recommendation: this evidence
+justifies promoting the dense-first direction to Testing for M2 (owner handoff).
 
 ## ADR-003: Tokenizer Strategy
 
@@ -87,6 +104,17 @@ property-based tests (`tests/test_bpe_pbt.py`). This is the bakeoff scaffolding;
 the final vocabulary size and training corpus remain Proposed pending a held-out
 training corpus and the full criteria in `tokenizer-evaluation.md`.
 
+Research evidence (L-002, 2026-06-20): reference vocab sizes have converged upward —
+Llama 3 and DeepSeek-V3 at 128k, Qwen3 ~151.7k, Gemma 2/3 at 256k/262k, OLMo 2 at
+~100k. Byte-level BPE (Qwen3, Llama 3, DeepSeek) is the mainstream lossless base,
+matching fal'Cie's existing choice. Critically, Gemma 3 grew its vocabulary
+specifically to improve Japanese/CJK encoding "at the expense of a slight increase
+of token counts for English and code." This makes vocab size the key open decision
+for a JP-first model. See `docs/research/open-weight-recipes.md` (Tokenizer).
+Recommendation: run a vocab-size bakeoff at 64k / 128k / 256k measuring Japanese
+fertility vs embedding-parameter cost on a JP-heavy held-out corpus before fixing
+the size.
+
 ## ADR-004: Context Length Strategy
 
 Status: Proposed
@@ -103,6 +131,15 @@ Current direction:
 
 Start with moderate context for experimental models, then scale context only after long-context evals and infrastructure are ready.
 
+Research evidence (L-002, 2026-06-20): the consensus is "pretrain short, extend
+late." All five reference models pretrain at 4k-8k, raise RoPE theta (5x10^5-1x10^6),
+then extend to 32k->128k with YaRN and validate with needle-in-a-haystack (Llama 3
+did this in 6 staged steps over ~800B tokens). Gemma 3's interleaved local/global
+attention (5:1, 1024-token local window) is the cheap way to hold a 128k KV-cache.
+See `docs/research/open-weight-recipes.md` (Context length). Recommendation:
+pretrain at 4k with high RoPE theta; add staged YaRN extension with NIAH validation;
+evaluate local/global attention before committing to long-context training cost.
+
 ## ADR-005: Checkpoint Format
 
 Status: Proposed
@@ -117,6 +154,17 @@ Requirements:
 Current direction:
 
 Use safetensors-compatible release artifacts whenever possible.
+
+Research evidence (L-002, 2026-06-20): safetensors + Hugging Face compatibility is
+universal across all five reference models, confirming this direction. DeepSeek-V3
+additionally ships native FP8 weights with an FP8<->BF16 conversion script. License
+is a hard release gate for fal'Cie's Apache-2.0 goal: Qwen3 and OLMo 2 are Apache-2.0;
+Llama 3 (Community License) and Gemma (Gemma Terms) are not, and both forbid using
+their outputs to train a competing model. OLMo 2 also releases data, code, logs, and
+thousands of intermediate checkpoints — the reproducibility bar fal'Cie's roadmap
+principles target. See `docs/research/open-weight-recipes.md` (Checkpoint/release).
+Recommendation: keep safetensors+HF+checksums; add provenance metadata; treat the
+Apache-2.0 provenance rule as a data-policy constraint, not just a release step.
 
 ## ADR-006: Testing Strategy and Property-Based Testing
 
